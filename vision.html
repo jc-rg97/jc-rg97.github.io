@@ -24,7 +24,11 @@
       --ink: #111112; --muted: #666668; --faint: #9A9A98;
       --line: rgba(17,17,18,0.08); --line-soft: rgba(17,17,18,0.04);
 
-      --accent: var(--focus-mid);
+      --accent: #6F8A66;
+      --state-color: #6F8A66;
+      --state-bright: #C6D4BF;
+      --surface: #EFF2EC; --surface-2: #E5EBDF; --glow: rgba(111,138,102,0.16);
+      --g1: #6E8A5C; --g2: #44512F; --g3: #1E251A;
       --font-display: "Fraunces", Georgia, serif;
       --font-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
@@ -38,7 +42,7 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: var(--font-body); color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+    body { font-family: var(--font-body); color: var(--ink); background: var(--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
 
     /* feine Grain-Textur für taktiles Premium-Gefühl */
     body::after {
@@ -75,7 +79,8 @@
     .site-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 48px; height: var(--header-h); background: rgba(244,242,238,0.4); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid transparent; z-index: 1000; transition: border-color 0.4s ease, background 0.4s ease, padding 0.4s ease; }
     .site-header.scrolled { border-bottom-color: var(--line-soft); background: rgba(244,242,238,0.85); padding-top: 4px; padding-bottom: 4px; }
     .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); z-index: 1001; }
-    .brand .mark { width: 26px; height: 26px; object-fit: contain; display: block; }
+    .brand .mark { width: 28px; height: 28px; display: inline-block; flex: none; }
+    .brand .mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .brand .name { font-family: var(--font-body); font-weight: 700; font-size: 0.94rem; letter-spacing: 0.18em; }
 
     .nav-toggle { display: none; width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
@@ -145,7 +150,15 @@
     .story-body p .soft { color: var(--muted); }
 
     /* ===== PULLQUOTE ===== */
-    .pullquote { padding: 130px 5.5%; background: var(--ink); color: #fff; text-align: center; position: relative; z-index: 1; }
+    .pullquote { padding: 140px 5.5%; color: #fff; text-align: center; position: relative; z-index: 1; overflow: hidden;
+      background:
+        radial-gradient(60% 70% at 22% 12%, var(--g1), transparent 55%),
+        radial-gradient(70% 80% at 88% 108%, color-mix(in srgb, var(--g1) 50%, var(--g3)), transparent 60%),
+        linear-gradient(152deg, var(--g2) 0%, var(--g3) 82%); }
+    .pullquote::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+      background: repeating-radial-gradient(circle at 14% 88%, transparent 0 46px, rgba(255,255,255,0.05) 46px 47px);
+      -webkit-mask-image: radial-gradient(130% 120% at 50% 50%, #000 35%, transparent 88%); mask-image: radial-gradient(130% 120% at 50% 50%, #000 35%, transparent 88%); }
+    .pullquote blockquote, .pullquote cite { position: relative; z-index: 1; }
     .pullquote blockquote { font-family: var(--font-display); font-style: italic; font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: 1.25; max-width: 1000px; margin: 0 auto; letter-spacing: -0.02em; }
     .pullquote cite { display: block; margin-top: 36px; font-family: var(--font-mono); font-style: normal; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.6; }
 
@@ -166,15 +179,16 @@
 
     /* ===== SUSTAINABILITY ===== */
     .sustain { padding: 0 5.5% 130px; max-width: 1400px; margin: 0 auto; }
-    .sustain-inner { background: var(--bg-pure); border: 1px solid var(--line-soft); border-radius: 28px; padding: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; box-shadow: var(--shadow-soft); transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+    .sustain-inner { background: var(--bg-pure); border: 1px solid var(--line-soft); border-radius: 28px; padding: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; box-shadow: var(--shadow-soft), 0 40px 90px -50px var(--glow); transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
     .sustain-inner:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
     .sustain h2 { font-size: clamp(2.2rem, 4vw, 3rem); letter-spacing: -0.03em; line-height: 1.12; }
     .sustain p { color: var(--muted); margin: 20px 0; font-size: 1.1rem; line-height: 1.65; }
     .sustain ul { list-style: none; margin-top: 32px; }
     .sustain li { font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.04em; padding: 12px 0; border-bottom: 1px dashed var(--line-soft); display: flex; align-items: center; gap: 14px; }
     .sustain li:last-child { border-bottom: none; }
-    .sustain li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--focus-mid); }
-    .sustain-visual { height: 420px; border-radius: 20px; background: linear-gradient(160deg, var(--bg-warm), var(--bg)); border: 1px dashed rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--muted); text-align: center; padding: 20px; }
+    .sustain li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .sustain-visual { width: 100%; aspect-ratio: 852 / 479; border-radius: 20px; overflow: hidden; position: relative; background: #11110F; }
+    .sustain-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ===== PERSONALITY / TONE ===== */
     .tone { padding: 0 5.5% 130px; max-width: 900px; margin: 0 auto; text-align: center; }
@@ -187,14 +201,37 @@
     .tone .chip:hover { background: var(--bg); color: var(--ink); border-color: var(--ink); }
 
     /* ===== FINAL CTA ===== */
-    .final-cta { text-align: center; padding: 140px 5.5% 100px; background: var(--bg-pure); border-top: 1px solid var(--line-soft); position: relative; overflow: hidden; }
-    .final-cta::before { content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%); width: 80%; height: 100%; background: radial-gradient(closest-side, var(--htc, var(--focus-mid)), transparent 70%); pointer-events: none; opacity: 0.08; }
+    .final-cta { text-align: center; padding: 140px 5.5% 100px; background: var(--surface-2); border-top: 1px solid var(--line-soft); position: relative; overflow: hidden; }
+    .final-cta::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 90%; height: 130%; background: radial-gradient(closest-side, var(--glow), transparent 70%); pointer-events: none; opacity: 1; }
     .final-cta > * { position: relative; z-index: 1; }
     .final-cta h2 { font-size: clamp(2.6rem, 5.5vw, 4.2rem); letter-spacing: -0.03em; line-height: 1.02; }
     .final-cta p { color: var(--muted); margin: 22px auto 40px; font-size: 1.15rem; max-width: 500px; line-height: 1.6; }
 
     /* ===== FOOTER ===== */
-    .site-footer { padding: 70px 5.5% 60px; background: var(--bg); border-top: 1px solid var(--line-soft); }
+    /* ====================== NEWSLETTER / ANGEBOT ====================== */
+    .newsletter { position: relative; overflow: hidden; padding: 104px 5.5%; color: #fff;
+      background: radial-gradient(60% 85% at 24% 8%, var(--g1), transparent 55%), linear-gradient(152deg, var(--g2) 0%, var(--g3) 82%);
+      transition: --g1 1.2s var(--ease), --g2 1.2s var(--ease), --g3 1.2s var(--ease); }
+    .newsletter::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.45;
+      background: repeating-radial-gradient(circle at 14% 90%, transparent 0 46px, rgba(255,255,255,0.05) 46px 47px);
+      -webkit-mask-image: radial-gradient(130% 120% at 50% 50%, #000 35%, transparent 88%); mask-image: radial-gradient(130% 120% at 50% 50%, #000 35%, transparent 88%); }
+    .nl-inner { max-width: 660px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .newsletter .eyebrow { color: rgba(255,255,255,0.75); justify-content: center; margin-bottom: 0; }
+    .newsletter .eyebrow::before { background: rgba(255,255,255,0.5); opacity: 1; }
+    .nl-inner h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 4.4vw, 3.1rem); letter-spacing: -0.025em; line-height: 1.05; margin-top: 14px; }
+    .nl-inner h2 em { font-style: italic; color: var(--state-bright); }
+    .nl-inner p { color: rgba(255,255,255,0.82); margin: 18px auto 32px; max-width: 480px; line-height: 1.6; font-size: 1.05rem; }
+    .nl-form { display: flex; gap: 10px; max-width: 470px; margin: 0 auto; }
+    .nl-form input { flex: 1; min-width: 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.28); border-radius: 100px; padding: 15px 22px; color: #fff; font-family: var(--font-body); font-size: 0.95rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: border-color 0.3s, background 0.3s; }
+    .nl-form input::placeholder { color: rgba(255,255,255,0.6); }
+    .nl-form input:focus { outline: none; border-color: #fff; background: rgba(255,255,255,0.16); }
+    .nl-form button { background: #fff; color: #111; border: none; border-radius: 100px; padding: 15px 28px; font-weight: 600; font-family: var(--font-body); font-size: 0.92rem; cursor: pointer; white-space: nowrap; transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+    .nl-form button:hover { transform: translateY(-2px); box-shadow: 0 14px 32px -10px rgba(0,0,0,0.55); }
+    .nl-note { display: block; margin-top: 16px; font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.08em; color: rgba(255,255,255,0.55); }
+    .nl-success { font-family: var(--font-display); font-style: italic; font-size: 1.3rem; color: #fff; margin: 6px 0; }
+    @media (max-width: 560px) { .newsletter { padding: 80px 7%; } .nl-form { flex-direction: column; } .nl-form button { width: 100%; } }
+
+    .site-footer { padding: 70px 5.5% 60px; background: var(--surface); border-top: 1px solid var(--line-soft); }
     .footer-grid { display: flex; justify-content: space-between; align-items: flex-end; gap: 36px; flex-wrap: wrap; max-width: 1600px; margin: 0 auto; }
     .footer-tag { font-family: var(--font-display); font-style: italic; color: var(--muted); margin-top: 12px; font-size: 1.05rem; }
     .footer-links { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -215,7 +252,6 @@
       .value-row { grid-template-columns: 1fr; gap: 12px; padding-left: 0; }
       .value-row:hover { padding-left: 0; }
       .sustain-inner { grid-template-columns: 1fr; padding: 48px 32px; gap: 40px; }
-      .sustain-visual { height: 280px; }
     }
     @media (max-width: 860px) {
       .nav-toggle { display: flex; }
@@ -267,7 +303,7 @@
 
 <header class="site-header" id="header">
   <a href="index.html" class="brand">
-    <img class="mark" src="logo.png" alt="Core Elements Logo" width="27" height="27">
+    <span class="mark"><img src="logo-color.png" alt="Core Elements"></span>
     <span class="name">CORE ELEMENTS</span>
   </a>
   <nav class="site-nav" id="siteNav">
@@ -363,7 +399,7 @@
           <li>Ohne Zucker</li>
         </ul>
       </div>
-      <div class="sustain-visual reveal d1">[PLATZHALTER: Glasflasche &amp; Bio-Cap im Detail]</div>
+      <div class="sustain-visual reveal d1"><img src="vision-flasche.png" alt="Glasflasche & Bio-Cap im Detail" loading="lazy"></div>
     </div>
   </section>
 
@@ -388,10 +424,23 @@
   </section>
 </main>
 
+<section class="newsletter">
+  <div class="nl-inner">
+    <span class="eyebrow">Werde Teil von Core Elements</span>
+    <h2>10 % auf deine <em>erste Bestellung</em>.</h2>
+    <p>Trag dich ein für ruhige Updates, neue Elements und exklusive Angebote — kein Spam, nur das, was zählt.</p>
+    <form class="nl-form" id="nlForm" novalidate>
+      <input type="email" id="nlEmail" placeholder="Deine E-Mail-Adresse" aria-label="E-Mail-Adresse" required>
+      <button type="submit">Code sichern →</button>
+    </form>
+    <span class="nl-note" id="nlNote">Jederzeit abbestellbar. Deine Daten behandeln wir mit Sorgfalt.</span>
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="footer-grid">
     <div>
-      <a href="index.html" class="brand"><img class="mark" src="logo.png" alt="Core Elements Logo" width="27" height="27"><span class="name">CORE ELEMENTS</span></a>
+      <a href="index.html" class="brand"><span class="mark"><img src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
       <div class="footer-tag">Designed for real life.</div>
     </div>
     <div class="footer-links">
@@ -530,6 +579,22 @@
     }
 
     /* Scroll Reveals */
+    var nlForm = document.getElementById('nlForm');
+    if (nlForm) {
+      nlForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('nlEmail');
+        var note = document.getElementById('nlNote');
+        if (email && email.value.indexOf('@') > 0 && email.value.lastIndexOf('.') > email.value.indexOf('@') + 1) {
+          nlForm.innerHTML = '<p class="nl-success">Willkommen an Bord — dein 10 %-Code ist unterwegs. ✦</p>';
+          if (note) note.textContent = '';
+        } else {
+          if (note) note.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+          if (email) email.focus();
+        }
+      });
+    }
+
     var reveals = document.querySelectorAll('.reveal:not(.in)');
     if ('IntersectionObserver' in window && !reduce) {
       var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });

@@ -30,16 +30,25 @@
 
       --header-h: 72px;
       --ease: cubic-bezier(0.25, 1, 0.3, 1);
-      --state-color: var(--focus-mid); --state-light: var(--focus-light);
+      /* Markengrün = neutraler Default (keine Auswahl) */
+      --green-mid: #6F8A66; --green-bright: #C6D4BF; --green-dark: #3D4A30;
+      --state-color: var(--green-mid); --state-light: #B9C8B5; --state-dark: var(--green-dark); --state-bright: var(--green-bright);
 
       --shadow-soft: 0 2px 8px -2px rgba(0,0,0,0.04), 0 12px 32px -8px rgba(0,0,0,0.08);
       --shadow-lift: 0 4px 12px -2px rgba(0,0,0,0.06), 0 24px 54px -12px rgba(0,0,0,0.18);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @property --g1 { syntax: '<color>'; inherits: true; initial-value: #6E8A5C; }
+    @property --g2 { syntax: '<color>'; inherits: true; initial-value: #44512F; }
+    @property --g3 { syntax: '<color>'; inherits: true; initial-value: #1E251A; }
+    @property --surface  { syntax: '<color>'; inherits: true; initial-value: #EFF2EC; }
+    @property --surface-2 { syntax: '<color>'; inherits: true; initial-value: #E5EBDF; }
+    @property --glow { syntax: '<color>'; inherits: true; initial-value: rgba(111,138,102,0.16); }
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font-body); color: var(--ink); background: var(--bg);
+      font-family: var(--font-body); color: var(--ink); background: var(--surface);
+      transition: --surface 1.2s var(--ease);
       line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
@@ -75,10 +84,22 @@
     .btn:hover .arrow { transform: translateX(6px); }
 
     /* ---------- Header ---------- */
-    .site-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 48px; height: var(--header-h); background: rgba(244,242,238,0.4); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid transparent; z-index: 1000; transition: border-color 0.4s ease, background 0.4s ease, padding 0.4s ease; }
-    .site-header.scrolled { border-bottom-color: var(--line-soft); background: rgba(244,242,238,0.85); padding-top: 4px; padding-bottom: 4px; }
+    .site-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 48px; height: var(--header-h); background: transparent; border-bottom: 1px solid transparent; z-index: 1000; transition: border-color 0.4s ease, background 0.4s ease, padding 0.4s ease; }
+    .site-header.scrolled { border-bottom-color: var(--line-soft); background: rgba(244,242,238,0.85); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); padding-top: 4px; padding-bottom: 4px; }
+    .site-header .brand .name, .site-header .site-nav a, .site-header .cart-btn { color: #fff; }
+    .site-header .nav-toggle span, .site-header .site-nav a::after { background: #fff; }
+    .site-header.scrolled .brand .name, .site-header.scrolled .site-nav a, .site-header.scrolled .cart-btn { color: var(--ink); }
+    .site-header.scrolled .nav-toggle span, .site-header.scrolled .site-nav a::after { background: var(--ink); }
+    .site-header.open .site-nav a, .site-header.open .cart-btn { color: var(--ink); }
+    .explorer .btn { background: #fff; color: #111; }
+    .explorer .btn::before { background: #f4f3f0; }
     .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); z-index: 1001; }
-    .brand .mark { width: 26px; height: 26px; object-fit: contain; display: block; }
+    .brand .mark { position: relative; width: 28px; height: 28px; display: inline-block; flex: none; }
+    .brand .mark .mk { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity 0.4s ease; }
+    .site-header .mk-dark { opacity: 0; }
+    .site-header.scrolled .mk-light { opacity: 0; }
+    .site-header.scrolled .mk-dark { opacity: 1; }
+    .site-footer .mk-light { display: none; }
     .brand .name { font-family: var(--font-body); font-weight: 700; font-size: 0.94rem; letter-spacing: 0.18em; }
 
     .nav-toggle { display: none; width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
@@ -142,14 +163,30 @@
        ELEMENTS EXPLORER
        ========================================================================== */
     .explorer {
+      position: relative; overflow: hidden;
       padding: calc(var(--header-h) + 60px) 5.5% 90px;
+      color: #fff;
       background:
-        radial-gradient(120% 80% at 80% 0%, color-mix(in srgb, var(--state-light) 55%, transparent), transparent 60%),
-        var(--bg);
-      transition: background 0.9s var(--ease);
+        radial-gradient(58% 56% at 22% 14%, var(--g1), transparent 55%),
+        radial-gradient(72% 64% at 90% 104%, color-mix(in srgb, var(--g1) 50%, var(--g3)), transparent 60%),
+        linear-gradient(152deg, var(--g2) 0%, var(--g3) 80%);
+      transition: --g1 1.2s var(--ease), --g2 1.2s var(--ease), --g3 1.2s var(--ease);
       min-height: 100vh;
       display: flex; flex-direction: column;
     }
+    .explorer::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5;
+      background:
+        repeating-radial-gradient(circle at 14% 90%, transparent 0 48px, rgba(255,255,255,0.05) 48px 49px),
+        repeating-radial-gradient(circle at 93% 8%, transparent 0 36px, rgba(255,255,255,0.045) 36px 37px);
+      -webkit-mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
+      mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
+    }
+    .explorer::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(95% 60% at 50% 122%, rgba(0,0,0,0.32), transparent 60%), linear-gradient(180deg, rgba(0,0,0,0.12), transparent 18%);
+    }
+    .explorer > * { position: relative; z-index: 1; }
     .explorer-tabs { display: flex; gap: 6px; margin-bottom: 60px; flex-wrap: wrap; }
     .tab {
       font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
@@ -174,45 +211,53 @@
     .ex-persona .pk { color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.66rem; display: block; margin-bottom: 6px; }
 
     /* vessel + bottle layout (ÜBERARBEITET) */
-    .ex-showcase {
-      position: relative;
-      width: 100%;
-      height: 420px; /* Feste Höhe für den Bereich */
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-    }
+    /* rechte Spalte: Flasche zentriert ÜBER den Inhaltsstoffen */
+    .ex-right { display: flex; flex-direction: column; align-items: center; width: 100%; }
+    .ex-product { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
-    /* Die Originalflasche: Positioniert versetzt HINTER dem Glas */
-    .showcase-bottle {
-      position: absolute;
-      z-index: 1; /* Hintergrund-Ebene */
-      left: 10%; /* Versetzt nach links */
-      bottom: -10px;
-      transform: rotate(-10deg); /* Leichte Drehung für Dynamik */
-      filter: saturate(0.8) opacity(0.8) drop-shadow(0 15px 25px rgba(0,0,0,0.12)); /* Etwas blasser im Hintergrund */
-      transition: transform 0.6s var(--ease), filter 0.6s var(--ease);
-    }
+    .ex-showcase { position: relative; display: flex; justify-content: center; align-items: flex-end; }
+    .showcase-bottle { position: relative; transition: transform 0.6s var(--ease), filter 0.6s var(--ease); filter: drop-shadow(0 26px 42px rgba(0,0,0,0.30)); }
+    .showcase-bottle img { height: 330px; width: auto; display: block; }
+    .showcase-bottle:hover { transform: translateY(-10px); filter: drop-shadow(0 34px 50px rgba(0,0,0,0.38)); }
+    .showcase-bottle.is-cap img { height: 286px; }
 
-    .showcase-bottle img {
-      height: 380px; /* Etwas größer im Hintergrund */
-      width: auto;
-    }
+    /* Varianten-Umschalter (Komplett / Cap / Flasche) */
+    .variant-toggle { display: flex; gap: 10px; margin: 4px 0 22px; flex-wrap: wrap; }
+    .vbtn { position: relative; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); border-radius: 14px; padding: 10px 15px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.4s var(--ease), background 0.4s var(--ease), border-color 0.4s var(--ease); }
+    .vbtn .vt-label { font-family: var(--font-body); font-weight: 600; font-size: 0.86rem; color: #fff; }
+    .vbtn .vt-sub { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+    .vbtn:hover { border-color: #fff; transform: translateY(-2px); }
+    .vbtn[aria-pressed="true"] { background: #fff; border-color: #fff; box-shadow: 0 10px 26px rgba(0,0,0,0.25); }
+    .vbtn[aria-pressed="true"] .vt-label { color: #111; }
+    .vbtn[aria-pressed="true"] .vt-sub { color: rgba(0,0,0,0.5); }
+    .explorer.neutral .variant-toggle { display: none; }
+    .vbtn-badge { position: absolute; top: -9px; right: 10px; background: var(--state-bright); color: #1a1a1a; font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; font-weight: 700; box-shadow: 0 5px 14px rgba(0,0,0,0.35); transition: background 0.7s var(--ease); }
+    /* Kauf-Vertrauenssignale */
+    .buy-meta { margin-top: 18px; }
+    .buy-ship { display: block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.05em; color: rgba(255,255,255,0.72); }
+    .buy-trust { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 14px; }
+    .buy-trust span { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(255,255,255,0.62); }
+    .buy-trust svg { width: 16px; height: 16px; stroke: var(--state-bright); transition: stroke 0.7s var(--ease); }
+    .explorer.neutral .buy-meta { display: none; }
 
-    .showcase-bottle:hover {
-      transform: rotate(0deg) translate(10px, -10px);
-      filter: saturate(1) opacity(1) drop-shadow(0 25px 35px rgba(0,0,0,0.2));
-    }
+    /* neutrale Lineup-Auswahl (Markengrün, keine Auswahl) */
+    .ex-lineup { display: none; gap: 14px; align-items: flex-end; justify-content: center; flex-wrap: wrap; width: 100%; }
+    .lineup-btn { background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 8px; border-radius: 16px; transition: transform 0.5s var(--ease); }
+    .lineup-btn img { height: 210px; width: auto; display: block; filter: drop-shadow(0 18px 28px rgba(0,0,0,0.28)); transition: transform 0.5s var(--ease), filter 0.5s var(--ease); }
+    .lineup-btn span { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.62); transition: color 0.4s var(--ease); }
+    .lineup-btn:hover { transform: translateY(-12px); }
+    .lineup-btn:hover img { filter: drop-shadow(0 30px 38px rgba(0,0,0,0.36)); }
+    .lineup-btn:hover span { color: #fff; }
 
-    /* Das interaktive Dosierglas: ZENTRAL und VORNE */
-    .ex-visual {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      z-index: 2; /* Vordergrund-Ebene */
-      margin-left: auto; /* Push as far right as possible */
-    }
+    /* Umschaltung neutral <-> Produkt */
+    .explorer.neutral .ex-lineup { display: flex; }
+    .explorer.neutral .ex-product { display: none; }
+    .explorer.neutral .ex-persona, .explorer.neutral #addToCartBtn { display: none; }
+    .ex-choosehint { display: none; }
+    .explorer.neutral .ex-choosehint { display: block; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: 6px; }
+
+    /* interaktive Demo (jetzt in eigener System-Sektion) */
+    .ex-visual { display: flex; flex-direction: column; align-items: center; position: relative; }
 
     .cap { width: 120px; height: 42px; border-radius: 12px 12px 4px 4px; background: linear-gradient(180deg, #fff, #ECECEA); border: 1px solid var(--line); border-bottom: none; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); cursor: pointer; position: relative; z-index: 3; transition: transform 0.18s var(--ease); box-shadow: 0 6px 16px rgba(0,0,0,0.06); font-weight: 500; }
     .cap.pressed { transform: translateY(6px); }
@@ -238,7 +283,7 @@
     /* spec sheet */
     .spec-wrapper { display: flex; justify-content: center; width: 100%; }
     .spec {
-      width: 100%; max-width: 380px; margin-top: 40px;
+      width: 100%; max-width: 380px; margin-top: 14px;
       background: var(--bg-pure); border: 1px solid var(--line-soft); border-radius: 20px; padding: 28px 30px 24px; box-shadow: var(--shadow-soft);
     }
     .spec-head { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; display: flex; justify-content: space-between; font-weight: 500; }
@@ -248,19 +293,83 @@
     .spec li .role { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
     .spec-note { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--state-color); margin-top: 18px; transition: color 0.7s var(--ease); font-weight: 500; }
 
+    /* ---- Explorer auf dunklem Verlauf: helle, premium Typografie (Overrides) ---- */
+    .ex-text .ex-eyebrow { color: rgba(255,255,255,0.78); }
+    .ex-text .ex-eyebrow::before { background: rgba(255,255,255,0.55); opacity: 1; }
+    .ex-name { color: #fff; }
+    .ex-slogan { color: rgba(255,255,255,0.92); }
+    .ex-lead { color: rgba(255,255,255,0.82); }
+    .ex-persona { color: rgba(255,255,255,0.86); border-left-color: var(--state-bright); }
+    .ex-persona .pk { color: rgba(255,255,255,0.6); }
+    .system .ex-hint { color: var(--muted); opacity: 0.8; }
+    .tab { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.72); }
+    .tab:hover { border-color: #fff; color: #fff; }
+    .tab[aria-selected="true"] { background: #fff; color: #111; border-color: #fff; box-shadow: 0 10px 26px rgba(0,0,0,0.3); }
+    .spec { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 24px 60px -24px rgba(0,0,0,0.45); }
+    .spec-head { color: rgba(255,255,255,0.65); }
+    .spec li { color: #fff; border-bottom-color: rgba(255,255,255,0.14); }
+    .spec li .role { color: rgba(255,255,255,0.6); }
+    .spec-note { color: var(--state-bright); }
+
     /* comparison strip */
-    .compare { background: var(--bg-pure); }
+    .compare { background: var(--surface-2); position: relative; overflow: hidden; transition: --surface-2 1.2s var(--ease); }
+    .compare::before { content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 80%; height: 90%; background: radial-gradient(closest-side, var(--glow), transparent 70%); pointer-events: none; transition: --glow 1.2s var(--ease); opacity: 0.9; }
+    .compare > * { position: relative; z-index: 1; }
     .compare-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1520px; margin: 0 auto;}
     .compare-card { border-radius: 20px; padding: 32px 28px; position: relative; overflow: hidden; border: 1px solid var(--line-soft); cursor: pointer; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); box-shadow: var(--shadow-soft); background: var(--bg-pure); }
     .compare-card::before { content: ''; position: absolute; inset: 0; background: var(--c); opacity: 0.06; transition: opacity 0.5s var(--ease); }
     .compare-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lift); }
     .compare-card:hover::before { opacity: 0.15; }
     .compare-card > * { position: relative; z-index: 1; }
-    .compare-card h4 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .compare-card h4 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 6px; letter-spacing: -0.01em; transition: color 0.5s var(--ease); }
     .compare-card .cc-for { font-size: 0.9rem; color: var(--muted); line-height: 1.5; display: block; }
+    /* aktive (oben ausgewählte) Karte leuchtet auf */
+    .compare-card.active { border-color: color-mix(in srgb, var(--c) 55%, transparent); transform: translateY(-6px); box-shadow: 0 26px 60px -26px color-mix(in srgb, var(--c) 75%, transparent), var(--shadow-soft); }
+    .compare-card.active::before { opacity: 0.16; }
+    .compare-card.active::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); z-index: 2; }
+    .compare-card.active h4 { color: var(--c); }
+    .compare-card .cc-active { position: absolute; top: 16px; right: 16px; z-index: 2; width: 8px; height: 8px; border-radius: 50%; background: var(--c); opacity: 0; transform: scale(0.4); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 60%, transparent); }
+    .compare-card.active .cc-active { opacity: 1; transform: scale(1); }
+
+    /* ====================== SYSTEM / CORE-CLICK ====================== */
+    .system { background: var(--surface-2); position: relative; overflow: hidden; transition: --surface-2 1.2s var(--ease); }
+    .system::before { content: ''; position: absolute; top: -25%; left: 12%; width: 60%; height: 90%; background: radial-gradient(closest-side, var(--glow), transparent 70%); pointer-events: none; transition: --glow 1.2s var(--ease); opacity: 0.85; }
+    .system-inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 70px; align-items: center; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
+    .system-text h2 { font-size: clamp(2.2rem, 4.6vw, 3.4rem); letter-spacing: -0.03em; line-height: 1.06; margin-bottom: 20px; }
+    .system-lead { color: var(--muted); font-size: 1.12rem; line-height: 1.62; max-width: 520px; }
+    .system-steps { list-style: none; margin: 36px 0 0; display: flex; flex-direction: column; gap: 20px; }
+    .system-steps li { display: flex; gap: 18px; align-items: flex-start; }
+    .ss-num { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--state-color); padding-top: 3px; min-width: 26px; transition: color 0.7s var(--ease); }
+    .system-steps strong { display: block; font-size: 1.02rem; margin-bottom: 3px; font-weight: 600; }
+    .system-steps span { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+    .system-foot { margin-top: 32px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--faint); line-height: 1.65; max-width: 480px; }
+    .system-stage { display: flex; align-items: center; justify-content: center; padding: 56px 40px; border-radius: 30px; background: linear-gradient(160deg, var(--bg-warm), var(--bg)); border: 1px solid var(--line-soft); box-shadow: var(--shadow-soft), 0 60px 100px -60px var(--glow); transition: box-shadow 0.6s var(--ease), --glow 1.2s var(--ease); }
 
     /* Footer */
-    .site-footer { padding: 70px 5.5% 60px; background: var(--bg); border-top: 1px solid var(--line-soft); }
+    /* ====================== NEWSLETTER / ANGEBOT ====================== */
+    .newsletter { position: relative; overflow: hidden; padding: 104px 5.5%; color: #fff;
+      background: radial-gradient(60% 85% at 24% 8%, var(--g1), transparent 55%), linear-gradient(152deg, var(--g2) 0%, var(--g3) 82%);
+      transition: --g1 1.2s var(--ease), --g2 1.2s var(--ease), --g3 1.2s var(--ease); }
+    .newsletter::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.45;
+      background: repeating-radial-gradient(circle at 14% 90%, transparent 0 46px, rgba(255,255,255,0.05) 46px 47px);
+      -webkit-mask-image: radial-gradient(130% 120% at 50% 50%, #000 35%, transparent 88%); mask-image: radial-gradient(130% 120% at 50% 50%, #000 35%, transparent 88%); }
+    .nl-inner { max-width: 660px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .newsletter .eyebrow { color: rgba(255,255,255,0.75); justify-content: center; margin-bottom: 0; }
+    .newsletter .eyebrow::before { background: rgba(255,255,255,0.5); opacity: 1; }
+    .nl-inner h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 4.4vw, 3.1rem); letter-spacing: -0.025em; line-height: 1.05; margin-top: 14px; }
+    .nl-inner h2 em { font-style: italic; color: var(--state-bright); }
+    .nl-inner p { color: rgba(255,255,255,0.82); margin: 18px auto 32px; max-width: 480px; line-height: 1.6; font-size: 1.05rem; }
+    .nl-form { display: flex; gap: 10px; max-width: 470px; margin: 0 auto; }
+    .nl-form input { flex: 1; min-width: 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.28); border-radius: 100px; padding: 15px 22px; color: #fff; font-family: var(--font-body); font-size: 0.95rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: border-color 0.3s, background 0.3s; }
+    .nl-form input::placeholder { color: rgba(255,255,255,0.6); }
+    .nl-form input:focus { outline: none; border-color: #fff; background: rgba(255,255,255,0.16); }
+    .nl-form button { background: #fff; color: #111; border: none; border-radius: 100px; padding: 15px 28px; font-weight: 600; font-family: var(--font-body); font-size: 0.92rem; cursor: pointer; white-space: nowrap; transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+    .nl-form button:hover { transform: translateY(-2px); box-shadow: 0 14px 32px -10px rgba(0,0,0,0.55); }
+    .nl-note { display: block; margin-top: 16px; font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.08em; color: rgba(255,255,255,0.55); }
+    .nl-success { font-family: var(--font-display); font-style: italic; font-size: 1.3rem; color: #fff; margin: 6px 0; }
+    @media (max-width: 560px) { .newsletter { padding: 80px 7%; } .nl-form { flex-direction: column; } .nl-form button { width: 100%; } }
+
+    .site-footer { padding: 70px 5.5% 60px; background: var(--surface); border-top: 1px solid var(--line-soft); transition: --surface 1.2s var(--ease); }
     .footer-grid { display: flex; justify-content: space-between; align-items: flex-end; gap: 36px; flex-wrap: wrap; max-width: 1600px; margin: 0 auto; }
     .footer-tag { font-family: var(--font-display); font-style: italic; color: var(--muted); margin-top: 12px; font-size: 1.05rem; }
     .footer-links { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -281,20 +390,13 @@
       .ex-lead, .ex-persona { margin-left: auto; margin-right: auto; }
       .ex-persona { text-align: left; }
 
-      .ex-showcase {
-        position: static;
-        height: auto;
-        flex-direction: column;
-        align-items: center;
-        gap: 40px;
-      }
-      .showcase-bottle {
-        position: static;
-        transform: none;
-        filter: saturate(1) opacity(1) drop-shadow(0 20px 30px rgba(0,0,0,0.15));
-      }
-      .showcase-bottle img { height: 220px; }
-      .ex-visual { z-index: 1; margin-left: auto; margin-right: auto;}
+      .ex-showcase { position: static; height: auto; }
+      .showcase-bottle { position: static; transform: none; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.22)); }
+      .showcase-bottle img { height: 260px; }
+      .ex-lineup { gap: 8px; }
+      .lineup-btn img { height: 150px; }
+      .system-inner { grid-template-columns: 1fr; gap: 44px; }
+      .system-stage { padding: 44px 24px; order: -1; }
 
       .compare-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -353,7 +455,7 @@
 
 <header class="site-header" id="header">
   <a href="index.html" class="brand">
-    <img class="mark" src="logo.png" alt="Core Elements Logo" width="27" height="27">
+    <span class="mark"><img class="mk mk-light" src="logo-white.png" alt="Core Elements"><img class="mk mk-dark" src="logo-color.png" alt=""></span>
     <span class="name">CORE ELEMENTS</span>
   </a>
   <nav class="site-nav" id="siteNav">
@@ -366,7 +468,7 @@
 </header>
 
 <main>
-  <section class="explorer" id="explorer">
+  <section class="explorer neutral" id="explorer">
     <div class="explorer-tabs" role="tablist" aria-label="Element wählen">
       <button class="tab" role="tab" data-state="calm"   aria-selected="false">Calm</button>
       <button class="tab" role="tab" data-state="focus"  aria-selected="true">Focus</button>
@@ -381,30 +483,44 @@
         <p class="ex-slogan" id="exSlogan">For the hours that matter.</p>
         <p class="ex-lead" id="exLead"></p>
         <p class="ex-persona" id="exPersona"></p>
+        <div class="variant-toggle" id="variantToggle" role="group" aria-label="Variante wählen">
+          <button class="vbtn" data-variant="complete" aria-pressed="true"><span class="vbtn-badge">Beliebt</span><span class="vt-label">Komplett</span><span class="vt-sub">Flasche + Cap</span></button>
+          <button class="vbtn" data-variant="cap" aria-pressed="false"><span class="vt-label">Nur Cap</span><span class="vt-sub">Nachfüllen</span></button>
+          <button class="vbtn" data-variant="bottle" aria-pressed="false"><span class="vt-label">Nur Flasche</span><span class="vt-sub">Leeres Glas</span></button>
+        </div>
         <button class="btn" id="addToCartBtn"><span class="lbl">In den Warenkorb — <span id="exPrice">36,90 €</span></span> <span class="arrow">→</span></button>
-      </div>
-
-      <div>
-        <div class="ex-showcase">
-          <div class="showcase-bottle">
-            <img id="exBottleImg" src="bottle-focus.png" alt="Original Flasche" decoding="async">
-          </div>
-
-          <div class="ex-visual">
-            <button class="cap" id="cap" aria-label="Core-Cap drücken und Nährstoffe freisetzen">Press</button>
-            <div class="glass" id="glass">
-              <div class="water" id="water"></div>
-              <div class="bloom" id="bloom"></div>
-            </div>
-            <div class="ex-hint" id="hint">↑ Drück den Deckel</div>
+        <div class="buy-meta" id="buyMeta">
+          <span class="buy-ship">Inkl. MwSt. · Kostenloser Versand ab 49 €</span>
+          <div class="buy-trust">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>2–3 Tage Lieferung</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5l2 2"/><path d="M20 5v4h-4"/><path d="M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M4 19v-4h4"/></svg>30 Tage Rückgabe</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Sichere Zahlung</span>
           </div>
         </div>
+        <p class="ex-choosehint" id="exChooseHint">Wähle rechts ein Element, um es zu öffnen.</p>
+      </div>
 
-        <div class="spec-wrapper">
-          <div class="spec">
-            <div class="spec-head"><span>Inhaltsstoffe</span><span id="specCount">5</span></div>
-            <ul id="specList"></ul>
-            <div class="spec-note" id="specNote">Ohne Zucker</div>
+      <div class="ex-right">
+        <div class="ex-lineup" id="exLineup" role="group" aria-label="Element wählen">
+          <button class="lineup-btn" data-state="calm"  aria-label="CALM wählen"><img src="bottle-calm.png"  alt="" decoding="async"><span>CALM</span></button>
+          <button class="lineup-btn" data-state="focus" aria-label="FOCUS wählen"><img src="bottle-focus.png" alt="" decoding="async"><span>FOCUS</span></button>
+          <button class="lineup-btn" data-state="energy" aria-label="ENERGY wählen"><img src="bottle-energy.png" alt="" decoding="async"><span>ENERGY</span></button>
+          <button class="lineup-btn" data-state="reset" aria-label="RESET wählen"><img src="bottle-reset.png" alt="" decoding="async"><span>RESET</span></button>
+        </div>
+
+        <div class="ex-product">
+          <div class="ex-showcase">
+            <div class="showcase-bottle">
+              <img id="exBottleImg" src="bottle-focus.png" alt="Original Flasche" decoding="async">
+            </div>
+          </div>
+
+          <div class="spec-wrapper">
+            <div class="spec">
+              <div class="spec-head"><span id="specLabel">Inhaltsstoffe</span><span id="specCount">5</span></div>
+              <ul id="specList"></ul>
+              <div class="spec-note" id="specNote">Ohne Zucker</div>
+            </div>
           </div>
         </div>
       </div>
@@ -418,27 +534,46 @@
       <p class="reveal d1">Dieselbe Glasflasche, derselbe Core-Cap — vier Zustände. Tipp ein Element an, um es oben zu öffnen.</p>
     </div>
     <div class="compare-grid">
-      <div class="compare-card reveal" style="--c: var(--calm-mid);" data-jump="calm">
+      <div class="compare-card reveal" style="--c: var(--calm-mid);" data-jump="calm"><span class="cc-active" aria-hidden="true"></span>
         <h4>CALM</h4><span class="cc-for">Für den lauten Feierabend</span>
       </div>
-      <div class="compare-card reveal d1" style="--c: var(--focus-mid);" data-jump="focus">
+      <div class="compare-card reveal d1" style="--c: var(--focus-mid);" data-jump="focus"><span class="cc-active" aria-hidden="true"></span>
         <h4>FOCUS</h4><span class="cc-for">Für die Stunden, die zählen</span>
       </div>
-      <div class="compare-card reveal d2" style="--c: var(--energy-mid);" data-jump="energy">
+      <div class="compare-card reveal d2" style="--c: var(--energy-mid);" data-jump="energy"><span class="cc-active" aria-hidden="true"></span>
         <h4>ENERGY</h4><span class="cc-for">Für das volle Training</span>
       </div>
-      <div class="compare-card reveal d3" style="--c: var(--reset-mid);" data-jump="reset">
+      <div class="compare-card reveal d3" style="--c: var(--reset-mid);" data-jump="reset"><span class="cc-active" aria-hidden="true"></span>
         <h4>RESET</h4><span class="cc-for">Für den klaren Neustart</span>
       </div>
     </div>
   </section>
 
-  <section class="section" style="text-align:center; max-width: 800px; margin: 0 auto;">
-    <span class="eyebrow reveal" style="justify-content:center;">Der Core-Cap</span>
-    <h2 class="reveal d1" style="font-size: clamp(2rem,4.5vw,3.2rem); letter-spacing:-0.02em;">Die Nährstoffe bleiben im Deckel,<br>bis du sie brauchst.</h2>
-    <p class="reveal d1" style="color: var(--muted); margin: 24px auto 0; font-size: 1.15rem; max-width: 600px; line-height: 1.6;">
-      Vormischen lässt Wirkstoffe verlieren. Unser Core-Cap hält Vitamine und Mineralstoffe trocken und stabil — frisch freigesetzt erst im Moment des Klicks. Der Cap selbst ist aus biologisch abbaubarem Bio-Kunststoff.
-    </p>
+  <section class="section system" id="system">
+    <div class="system-inner">
+      <div class="system-text">
+        <span class="eyebrow reveal">Der Core-Cap · Press into balance</span>
+        <h2 class="reveal d1">Ein Klick.<br>Frisch freigesetzt.</h2>
+        <p class="reveal d1 system-lead">Vormischen lässt Wirkstoffe verlieren. Unser Core-Cap hält Vitamine und Mineralstoffe trocken und stabil — und gibt sie erst im Moment des Klicks ins Wasser. Probier es aus.</p>
+        <ol class="system-steps reveal d2">
+          <li><span class="ss-num">01</span><div><strong>Deckel drücken</strong><span>Der Core-Click löst das Pulver aus dem Deckel.</span></div></li>
+          <li><span class="ss-num">02</span><div><strong>Pulver freisetzen</strong><span>Wirkstoffe fallen frisch ins Glas — nichts ist vorgemischt.</span></div></li>
+          <li><span class="ss-num">03</span><div><strong>Schütteln &amp; genießen</strong><span>Kurz schütteln, fertig. Voller Wirkstoffgehalt im Moment.</span></div></li>
+        </ol>
+        <p class="reveal d2 system-foot">Der Cap selbst ist aus biologisch abbaubarem Bio-Kunststoff — aus Mais- und Zuckerrohrstärke.</p>
+      </div>
+
+      <div class="system-stage reveal d1">
+        <div class="ex-visual">
+          <button class="cap" id="cap" aria-label="Core-Cap drücken und Nährstoffe freisetzen">Press</button>
+          <div class="glass" id="glass">
+            <div class="water" id="water"></div>
+            <div class="bloom" id="bloom"></div>
+          </div>
+          <div class="ex-hint" id="hint">↑ Drück den Deckel</div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="section" style="text-align:center; padding-top: 40px;">
@@ -448,10 +583,23 @@
   </section>
 </main>
 
+<section class="newsletter">
+  <div class="nl-inner">
+    <span class="eyebrow">Werde Teil von Core Elements</span>
+    <h2>10 % auf deine <em>erste Bestellung</em>.</h2>
+    <p>Trag dich ein für ruhige Updates, neue Elements und exklusive Angebote — kein Spam, nur das, was zählt.</p>
+    <form class="nl-form" id="nlForm" novalidate>
+      <input type="email" id="nlEmail" placeholder="Deine E-Mail-Adresse" aria-label="E-Mail-Adresse" required>
+      <button type="submit">Code sichern →</button>
+    </form>
+    <span class="nl-note" id="nlNote">Jederzeit abbestellbar. Deine Daten behandeln wir mit Sorgfalt.</span>
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="footer-grid">
     <div>
-      <a href="index.html" class="brand"><img class="mark" src="logo.png" alt="Core Elements Logo" width="27" height="27"><span class="name">CORE ELEMENTS</span></a>
+      <a href="index.html" class="brand"><span class="mark"><img class="mk mk-dark" src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
       <div class="footer-tag">Designed for real life.</div>
     </div>
     <div class="footer-links">
@@ -520,7 +668,17 @@
       }
     };
 
-    var currentState = 'focus';
+    var GREEN = { color:'var(--green-mid)', light:'#B9C8B5', dark:'var(--green-dark)', bright:'#C6D4BF', g1:'#6E8A5C', g2:'#44512F', g3:'#1E251A', surface:'#EFF2EC', surface2:'#E5EBDF', glow:'rgba(111,138,102,0.16)' };
+
+    var currentState = null;
+    var currentVariant = 'complete';
+    var CAP_PRICE = 14.90, BOTTLE_PRICE = 22.90;
+    var VARIANTS = {
+      complete: { suffix: '',         tag: 'Flasche + Cap', img: function (k) { return 'bottle-' + k + '.png'; }, price: function (d) { return d.price; } },
+      cap:      { suffix: ' · Cap',     tag: 'Nachfüll-Cap',  img: function (k) { return 'cap-' + k + '.png'; },    price: function () { return CAP_PRICE; } },
+      bottle:   { suffix: ' · Flasche', tag: 'Leere Flasche', img: function (k) { return 'empty-' + k + '.png'; }, price: function () { return BOTTLE_PRICE; } }
+    };
+    var BOTTLE_SPECS = [['Borosilikatglas','Material'],['500 ml','Volumen'],['Spülmaschinenfest','Pflege'],['BPA-frei','Sicherheit']];
 
     // WARENKORB VIA LOCALSTORAGE LADEN
     var cart = JSON.parse(localStorage.getItem('ce_cart')) || [];
@@ -539,6 +697,7 @@
       persona: document.getElementById('exPersona'),
       specList: document.getElementById('specList'),
       specCount: document.getElementById('specCount'),
+      specLabel: document.getElementById('specLabel'),
       specNote: document.getElementById('specNote'),
       water: document.getElementById('water'),
       hint: document.getElementById('hint'),
@@ -559,28 +718,34 @@
       rootStyle.setProperty('--state-color', d.color);
       rootStyle.setProperty('--state-light', d.light);
       rootStyle.setProperty('--state-dark', d.dark);
+      var GRAD = {
+        focus:  { bright: '#AEC6CF', g1: '#1C8FA0', g2: '#214E5C', g3: '#10202A', surface: '#EFF4F4', surface2: '#E5EEEF', glow: 'rgba(21,127,139,0.16)' },
+        energy: { bright: '#FF8C84', g1: '#E45C54', g2: '#8E2A28', g3: '#2C1112', surface: '#F7EFEE', surface2: '#F1E4E3', glow: 'rgba(217,83,79,0.15)' },
+        calm:   { bright: '#F7D6AD', g1: '#F0A65C', g2: '#946A3D', g3: '#2B2016', surface: '#F7F1E8', surface2: '#F1E6D6', glow: 'rgba(244,157,72,0.17)' },
+        reset:  { bright: '#E4E8E8', g1: '#AEB8B7', g2: '#5C6A6B', g3: '#262C2C', surface: '#F1F3F3', surface2: '#E7ECEC', glow: 'rgba(127,140,141,0.13)' }
+      }[key];
+      if (GRAD) {
+        rootStyle.setProperty('--state-bright', GRAD.bright);
+        rootStyle.setProperty('--g1', GRAD.g1);
+        rootStyle.setProperty('--g2', GRAD.g2);
+        rootStyle.setProperty('--g3', GRAD.g3);
+        rootStyle.setProperty('--surface', GRAD.surface);
+        rootStyle.setProperty('--surface-2', GRAD.surface2);
+        rootStyle.setProperty('--glow', GRAD.glow);
+      }
 
       els.eyebrow.textContent = 'Element ' + d.idx + ' — ' + d.tagline;
       els.name.textContent = d.name;
       els.slogan.textContent = d.slogan;
       els.lead.textContent = d.lead;
       els.persona.innerHTML = '<span class="pk">Für Momente wie</span>' + d.persona;
-      els.specCount.textContent = d.ingredients.length;
-      els.specNote.textContent = d.note;
-      els.price.textContent = formatPrice(d.price);
 
-      if (els.bottleImg) {
-        els.bottleImg.src = 'bottle-' + key + '.png';
-      }
-
-      els.specList.innerHTML = '';
-      d.ingredients.forEach(function (ing) {
-        var li = document.createElement('li');
-        li.innerHTML = '<span>' + ing[0] + '</span><span class="role">' + ing[1] + '</span>';
-        els.specList.appendChild(li);
-      });
+      currentVariant = 'complete';
+      applyVariant();
 
       tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.state === key ? 'true' : 'false'); });
+      document.querySelectorAll('.compare-card').forEach(function (c) { c.classList.toggle('active', c.dataset.jump === key); });
+      var exEl = document.getElementById('explorer'); if (exEl) exEl.classList.remove('neutral');
 
       if (els.water && els.hint) {
         els.water.classList.remove('charged');
@@ -592,6 +757,68 @@
     }
 
     tabs.forEach(function (t) { t.addEventListener('click', function () { render(t.dataset.state); }); });
+    document.querySelectorAll('.lineup-btn').forEach(function (b) { b.addEventListener('click', function () { render(b.dataset.state); }); });
+
+    function applyVariant() {
+      var d = DATA[currentState]; if (!d) return;
+      var v = VARIANTS[currentVariant] || VARIANTS.complete;
+      document.querySelectorAll('#variantToggle .vbtn').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.dataset.variant === currentVariant ? 'true' : 'false');
+      });
+      els.price.textContent = formatPrice(v.price(d));
+      if (els.bottleImg) {
+        els.bottleImg.src = v.img(currentState);
+        var sb = els.bottleImg.closest('.showcase-bottle');
+        if (sb) sb.classList.toggle('is-cap', currentVariant === 'cap');
+      }
+      els.specList.innerHTML = '';
+      if (currentVariant === 'bottle') {
+        els.specLabel.textContent = 'Eigenschaften';
+        els.specCount.textContent = BOTTLE_SPECS.length;
+        els.specNote.textContent = 'Nachfüllbar · langlebig';
+        BOTTLE_SPECS.forEach(function (s) {
+          var li = document.createElement('li');
+          li.innerHTML = '<span>' + s[0] + '</span><span class="role">' + s[1] + '</span>';
+          els.specList.appendChild(li);
+        });
+      } else {
+        els.specLabel.textContent = (currentVariant === 'cap') ? 'Im Cap enthalten' : 'Inhaltsstoffe';
+        els.specCount.textContent = d.ingredients.length;
+        els.specNote.textContent = d.note;
+        d.ingredients.forEach(function (ing) {
+          var li = document.createElement('li');
+          li.innerHTML = '<span>' + ing[0] + '</span><span class="role">' + ing[1] + '</span>';
+          els.specList.appendChild(li);
+        });
+      }
+    }
+
+    document.querySelectorAll('#variantToggle .vbtn').forEach(function (b) {
+      b.addEventListener('click', function () { if (!currentState) return; currentVariant = b.dataset.variant; applyVariant(); });
+    });
+
+    function renderNeutral() {
+      currentState = null;
+      rootStyle.setProperty('--state-color', GREEN.color);
+      rootStyle.setProperty('--state-light', GREEN.light);
+      rootStyle.setProperty('--state-dark', GREEN.dark);
+      rootStyle.setProperty('--state-bright', GREEN.bright);
+      rootStyle.setProperty('--g1', GREEN.g1);
+      rootStyle.setProperty('--g2', GREEN.g2);
+      rootStyle.setProperty('--g3', GREEN.g3);
+      rootStyle.setProperty('--surface', GREEN.surface);
+      rootStyle.setProperty('--surface-2', GREEN.surface2);
+      rootStyle.setProperty('--glow', GREEN.glow);
+      els.eyebrow.textContent = 'Vier Elements — ein System';
+      els.name.textContent = 'Core Elements';
+      els.slogan.textContent = 'Choose your state.';
+      els.lead.textContent = 'Dieselbe Glasflasche, derselbe Core-Cap — vier funktionale Zustände. Wähle ein Element, um es zu öffnen.';
+      var exEl = document.getElementById('explorer'); if (exEl) exEl.classList.add('neutral');
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', 'false'); });
+      document.querySelectorAll('.compare-card').forEach(function (c) { c.classList.remove('active'); });
+      if (els.water) els.water.classList.remove('charged');
+      if (els.hint) { els.hint.textContent = '↑ Drück den Deckel'; els.hint.style.opacity = '0.8'; }
+    }
 
     document.querySelectorAll('.compare-card').forEach(function (c) {
       c.addEventListener('click', function () {
@@ -709,18 +936,21 @@
     };
 
     document.getElementById('addToCartBtn').addEventListener('click', function() {
+      if (!currentState) return;
       var d = DATA[currentState];
-      var existingItem = cart.find(i => i.id === currentState);
+      var v = VARIANTS[currentVariant] || VARIANTS.complete;
+      var id = currentState + '-' + currentVariant;
+      var existingItem = cart.find(i => i.id === id);
 
       if (existingItem) {
         existingItem.qty += 1;
       } else {
         cart.push({
-          id: currentState,
-          name: d.name,
-          price: d.price,
+          id: id,
+          name: d.name + v.suffix,
+          price: v.price(d),
           qty: 1,
-          img: 'bottle-' + currentState + '.png'
+          img: v.img(currentState)
         });
       }
       saveCart();
@@ -733,7 +963,7 @@
     // INIT & UI SETUP
     // ==========================================
     var initial = (location.hash || '').replace('#', '');
-    render(DATA[initial] ? initial : 'focus');
+    if (DATA[initial]) { render(initial); } else { renderNeutral(); }
 
     // Warenkorb initial aus dem LocalStorage rendern
     renderCart();
@@ -752,6 +982,22 @@
       siteNav.querySelectorAll('a').forEach(function (a) {
         if(!a.classList.contains('cart-btn')){
           a.addEventListener('click', function () { header.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); });
+        }
+      });
+    }
+
+    var nlForm = document.getElementById('nlForm');
+    if (nlForm) {
+      nlForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('nlEmail');
+        var note = document.getElementById('nlNote');
+        if (email && email.value.indexOf('@') > 0 && email.value.lastIndexOf('.') > email.value.indexOf('@') + 1) {
+          nlForm.innerHTML = '<p class="nl-success">Willkommen an Bord — dein 10 %-Code ist unterwegs. ✦</p>';
+          if (note) note.textContent = '';
+        } else {
+          if (note) note.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+          if (email) email.focus();
         }
       });
     }
