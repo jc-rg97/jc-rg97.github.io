@@ -7,93 +7,179 @@
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Hanken+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Hanken+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #F6F5F2; --ink: #1D1D1F; --muted: #6B6B6B; --accent: #157F8B;
-      --line: rgba(29,29,31,0.10); --line-soft: rgba(29,29,31,0.06);
+      --bg: #F4F2EE; --bg-warm: #FBFAF7; --bg-pure: #FFFFFF;
+      --ink: #111112; --muted: #666668; --faint: #9A9A98;
+      --line: rgba(17,17,18,0.08); --line-soft: rgba(17,17,18,0.04);
+      --accent: #6F8A66; --state-color: #6F8A66; --state-bright: #C6D4BF;
+      --surface: #EFF2EC; --surface-2: #E5EBDF; --glow: rgba(111,138,102,0.16);
+      --g1: #6E8A5C; --g2: #44512F; --g3: #1E251A;
       --font-display: "Fraunces", Georgia, serif;
-      --font-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-      --header-h: 66px; --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --header-h: 72px; --ease: cubic-bezier(0.25, 1, 0.3, 1);
+      --shadow-soft: 0 2px 8px -2px rgba(0,0,0,0.04), 0 12px 32px -8px rgba(0,0,0,0.08);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-body); color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-body); color: var(--ink); background: var(--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+    body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
     a { color: inherit; }
-    .site-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: var(--header-h); background: rgba(246,245,242,0.72); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line-soft); z-index: 1000; }
-    .logo { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.14em; text-decoration: none; color: var(--ink); }
-    .logo .dot { color: var(--accent); }
-    .site-nav { display: flex; gap: 36px; }
-    .site-nav a { text-decoration: none; font-size: 0.88rem; font-weight: 500; opacity: 0.72; transition: opacity 0.3s; }
+
+    .site-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 48px; height: var(--header-h); background: rgba(244,242,238,0.5); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid transparent; z-index: 1000; transition: border-color 0.4s ease, background 0.4s ease, padding 0.4s ease; }
+    .site-header.scrolled { border-bottom-color: var(--line-soft); background: rgba(244,242,238,0.85); padding-top: 4px; padding-bottom: 4px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); z-index: 1001; }
+    .brand .mark { width: 28px; height: 28px; display: inline-block; flex: none; }
+    .brand .mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .brand .name { font-family: var(--font-body); font-weight: 700; font-size: 0.94rem; letter-spacing: 0.18em; }
+    .nav-toggle { display: none; width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
+    .nav-toggle span { display: block; width: 22px; height: 1.6px; background: var(--ink); border-radius: 2px; transition: transform 0.35s var(--ease), opacity 0.3s ease; }
+    .site-header.open .nav-toggle span:nth-child(1) { transform: translateY(6.6px) rotate(45deg); }
+    .site-header.open .nav-toggle span:nth-child(2) { opacity: 0; }
+    .site-header.open .nav-toggle span:nth-child(3) { transform: translateY(-6.6px) rotate(-45deg); }
+    .site-nav { display: flex; gap: 42px; align-items: center; }
+    .site-nav a { text-decoration: none; color: var(--ink); font-size: 0.88rem; font-weight: 500; opacity: 0.6; position: relative; padding: 4px 0; transition: opacity 0.4s var(--ease); cursor: pointer; }
+    .site-nav a::after { content: ''; position: absolute; left: 0; bottom: -4px; height: 1.5px; width: 0; background: var(--ink); transition: width 0.4s var(--ease); }
     .site-nav a:hover { opacity: 1; }
+    .site-nav a:hover::after, .site-nav a[aria-current="page"]::after { width: 100%; }
+    .site-nav a[aria-current="page"] { opacity: 1; }
+    .cart-btn { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 8px; opacity: 0.6; text-decoration: none; }
+    .cart-btn:hover { opacity: 1; } .cart-btn svg { width: 16px; height: 16px; }
 
-    .legal { max-width: 760px; margin: 0 auto; padding: calc(var(--header-h) + 90px) 8% 100px; }
-    .legal .eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 18px; }
-    .legal h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, 5vw, 3.4rem); letter-spacing: -0.02em; margin-bottom: 14px; }
-    .legal .note { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); background: rgba(21,127,139,0.07); border: 1px solid rgba(21,127,139,0.18); border-radius: 12px; padding: 14px 18px; margin: 30px 0 44px; line-height: 1.6; }
-    .legal h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; margin: 40px 0 12px; letter-spacing: -0.01em; }
-    .legal p { color: var(--muted); margin-bottom: 10px; }
-    .legal .ph { color: var(--ink); background: rgba(29,29,31,0.05); border-radius: 4px; padding: 1px 7px; font-family: var(--font-mono); font-size: 0.86em; }
+    .legal { max-width: 860px; margin: 0 auto; padding: calc(var(--header-h) + 100px) 6% 20px; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; display: inline-flex; align-items: center; gap: 14px; }
+    .eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--accent); opacity: 0.8; }
+    .legal h1 { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.03em; font-size: clamp(2.6rem, 6vw, 4rem); line-height: 1.02; margin-bottom: 20px; }
+    .legal .lead { color: var(--muted); font-size: 1.12rem; max-width: 620px; line-height: 1.7; }
+    .legal .note { font-family: var(--font-mono); font-size: 0.72rem; color: #50603F; background: var(--surface-2); border: 1px solid rgba(111,138,102,0.28); border-radius: 14px; padding: 15px 20px; margin: 34px 0 4px; line-height: 1.65; display: flex; gap: 12px; align-items: flex-start; }
+    .legal .note svg { width: 18px; height: 18px; flex: none; margin-top: 1px; stroke: var(--accent); }
 
-    .site-footer { padding: 50px 8%; background: var(--bg); border-top: 1px solid var(--line-soft); }
-    .footer-grid { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; max-width: 1400px; margin: 0 auto; }
-    .footer-tag { font-family: var(--font-display); font-style: italic; color: var(--muted); margin-top: 8px; }
-    .footer-links { display: flex; gap: 24px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
-    .footer-links a { text-decoration: none; opacity: 0.7; } .footer-links a:hover { opacity: 1; }
+    .legal-card { background: var(--bg-pure); border: 1px solid var(--line-soft); border-radius: 28px; padding: clamp(32px, 5vw, 60px); margin-top: 44px; box-shadow: var(--shadow-soft); }
+    .legal-card section + section { margin-top: 38px; padding-top: 38px; border-top: 1px solid var(--line-soft); }
+    .legal-card h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.45rem; letter-spacing: -0.01em; margin-bottom: 16px; display: flex; align-items: baseline; gap: 14px; }
+    .legal-card h2 .idx { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; color: var(--accent); letter-spacing: 0.1em; }
+    .legal-card p { color: var(--muted); margin-bottom: 8px; }
+    .legal-card p strong { color: var(--ink); font-weight: 600; }
+    .legal-card a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(111,138,102,0.4); }
+    .legal-card a:hover { border-bottom-color: var(--accent); }
+
+    .site-footer { padding: 70px 5.5% 60px; background: var(--surface); border-top: 1px solid var(--line-soft); margin-top: 90px; }
+    .footer-grid { display: flex; justify-content: space-between; align-items: flex-end; gap: 36px; flex-wrap: wrap; max-width: 1600px; margin: 0 auto; }
+    .footer-tag { font-family: var(--font-display); font-style: italic; color: var(--muted); margin-top: 12px; font-size: 1.05rem; }
+    .footer-links { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; flex-wrap: wrap; }
+    .footer-links a { text-decoration: none; opacity: 0.65; transition: opacity 0.3s; }
+    .footer-links a:hover { opacity: 1; color: var(--ink); }
+    .footer-social { display: flex; gap: 20px; }
+    .footer-social a { color: var(--ink); opacity: 0.55; transition: opacity 0.3s, transform 0.3s var(--ease); }
+    .footer-social a:hover { opacity: 1; transform: translateY(-3px); }
+    .footer-social svg { width: 20px; height: 20px; }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.68rem; color: var(--faint); margin: 48px auto 0; max-width: 1600px; letter-spacing: 0.02em; }
     a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-    @media (max-width: 940px) { .site-header { padding: 0 22px; } .site-nav { gap: 18px; } }
+
+    @media (max-width: 860px) {
+      .nav-toggle { display: flex; }
+      .site-nav { position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 8px 24px 20px; background: rgba(244,242,238,0.96); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid var(--line-soft); transform: translateY(-16px); opacity: 0; pointer-events: none; transition: transform 0.4s var(--ease), opacity 0.4s var(--ease); }
+      .site-header.open .site-nav { transform: none; opacity: 1; pointer-events: auto; }
+      .site-nav a { padding: 16px 2px; font-size: 1.05rem; opacity: 0.9; border-bottom: 1px solid var(--line-soft); }
+      .site-nav a::after { display: none; }
+      .site-nav .cart-btn { padding-top: 20px; border-bottom: none; }
+    }
+    @media (max-width: 760px) { .site-header { padding: 0 24px; } }
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <a href="index.html" class="logo">CORE ELEMENTS<span class="dot">.</span></a>
-    <nav class="site-nav">
+<header class="site-header" id="header">
+  <a href="index.html" class="brand">
+    <span class="mark"><img src="logo-color.png" alt="Core Elements"></span>
+    <span class="name">CORE ELEMENTS</span>
+  </a>
+  <nav class="site-nav" id="siteNav">
+    <a href="index.html">Das Ritual</a>
+    <a href="elements.html">Elements</a>
+    <a href="vision.html">Vision</a>
+    <a href="elements.html" class="cart-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H3"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>Warenkorb</a>
+  </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="siteNav"><span></span><span></span><span></span></button>
+</header>
+
+<main class="legal">
+  <span class="eyebrow">Rechtliches</span>
+  <h1>Impressum</h1>
+  <p class="lead">Transparenz gehört zu Core Elements. Hier findest du alle gesetzlich vorgeschriebenen Angaben zum Anbieter dieser Website.</p>
+  <p class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg><span>Hinweis: Core Elements ist ein fiktives Konzept. Alle folgenden Angaben dienen ausschließlich der Demonstration und sind frei erfunden.</span></p>
+
+  <div class="legal-card">
+    <section>
+      <h2><span class="idx">01</span>Anbieter</h2>
+      <p><strong>Core Elements GmbH</strong></p>
+      <p>Sonnenallee 142</p>
+      <p>12059 Berlin, Deutschland</p>
+    </section>
+    <section>
+      <h2><span class="idx">02</span>Vertreten durch</h2>
+      <p>Geschäftsführung: Lena Mertens, Jonas Brandt</p>
+    </section>
+    <section>
+      <h2><span class="idx">03</span>Kontakt</h2>
+      <p>Telefon: +49 30 5550 1820</p>
+      <p>E-Mail: <a href="mailto:hallo@coreelements.de">hallo@coreelements.de</a></p>
+    </section>
+    <section>
+      <h2><span class="idx">04</span>Registereintrag</h2>
+      <p>Registergericht: Amtsgericht Berlin-Charlottenburg</p>
+      <p>Registernummer: HRB 248172 B</p>
+      <p>USt-IdNr.: DE352889471</p>
+    </section>
+    <section>
+      <h2><span class="idx">05</span>Verantwortlich für den Inhalt</h2>
+      <p>Lena Mertens (gemäß § 18 Abs. 2 MStV)</p>
+      <p>Sonnenallee 142, 12059 Berlin</p>
+    </section>
+    <section>
+      <h2><span class="idx">06</span>EU-Streitschlichtung</h2>
+      <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung bereit. Zur Beilegung von Streitigkeiten aus Verbraucherverträgen sind wir nicht verpflichtet und nicht bereit, an Verfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <a href="index.html" class="brand"><span class="mark"><img src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
+      <div class="footer-tag">Designed for real life.</div>
+    </div>
+    <div class="footer-links">
       <a href="index.html">Das Ritual</a>
       <a href="elements.html">Elements</a>
       <a href="vision.html">Vision</a>
-    </nav>
-  </header>
-
-  <main class="legal">
-    <span class="eyebrow">Rechtliches</span>
-    <h1>Impressum</h1>
-    <p class="note">Platzhalter — bitte mit deinen echten, rechtsverbindlichen Angaben füllen (Angaben gemäß § 5 DDG/TMG).</p>
-
-    <h2>Anbieter</h2>
-    <p>Core Elements <span class="ph">[Rechtsform, z. B. GmbH]</span></p>
-    <p><span class="ph">[Straße &amp; Hausnummer]</span></p>
-    <p><span class="ph">[PLZ &amp; Ort]</span></p>
-
-    <h2>Vertreten durch</h2>
-    <p><span class="ph">[Name der vertretungsberechtigten Person]</span></p>
-
-    <h2>Kontakt</h2>
-    <p>Telefon: <span class="ph">[Telefonnummer]</span></p>
-    <p>E-Mail: <span class="ph">[E-Mail-Adresse]</span></p>
-
-    <h2>Registereintrag</h2>
-    <p>Registergericht: <span class="ph">[Amtsgericht]</span></p>
-    <p>Registernummer: <span class="ph">[HRB …]</span></p>
-    <p>USt-IdNr.: <span class="ph">[DE …]</span></p>
-
-    <h2>Verantwortlich für den Inhalt</h2>
-    <p><span class="ph">[Name &amp; Anschrift gemäß § 18 Abs. 2 MStV]</span></p>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-grid">
-      <div>
-        <a href="index.html" class="logo">CORE ELEMENTS<span class="dot">.</span></a>
-        <div class="footer-tag">Designed for real life.</div>
-      </div>
-      <div class="footer-links">
-        <a href="index.html">Das Ritual</a>
-        <a href="elements.html">Elements</a>
-        <a href="vision.html">Vision</a>
-        <a href="impressum.html">Impressum</a>
-        <a href="datenschutz.html">Datenschutz</a>
-      </div>
+      <a href="impressum.html" aria-current="page">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
     </div>
-  </footer>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="0.6"/></svg></a>
+      <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v9.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 7a4 4 0 0 0 4 4"/></svg></a>
+      <a href="#" aria-label="E-Mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></a>
+    </div>
+  </div>
+  <div class="footer-copy">&copy; 2026 Core Elements. Dein inneres Gleichgewicht auf Knopfdruck.</div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var header = document.getElementById('header');
+    var navToggle = document.getElementById('navToggle');
+    window.addEventListener('scroll', function () { header.classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    if (navToggle) {
+      navToggle.addEventListener('click', function () {
+        var open = header.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.querySelectorAll('#siteNav a').forEach(function (a) {
+        a.addEventListener('click', function () { header.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); });
+      });
+    }
+  });
+</script>
 </body>
 </html>
