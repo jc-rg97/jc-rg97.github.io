@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Core Elements — Choose your state.</title>
+  <meta name="description" content="Funktionale Drinks in der Glasflasche mit Core-Cap. Vier Zustände — CALM, FOCUS, ENERGY, RESET. Designed for real life.">
+  <meta property="og:title" content="Core Elements">
+  <meta property="og:description" content="Funktionale Drinks in der Glasflasche mit Core-Cap. Vier Zustände — CALM, FOCUS, ENERGY, RESET. Designed for real life.">
+  <meta property="og:image" content="og-core.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo-color.png">
   <meta name="description" content="Funktionale Drinks mit reinen Inhaltsstoffen. Die Nährstoffe sitzen im Deckel – frei erst, wenn du es willst. CALM · FOCUS · ENERGY · RESET.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -188,7 +194,7 @@
         repeating-radial-gradient(circle at 15% 92%, transparent 0 48px, rgba(255,255,255,0.05) 48px 49px),
         repeating-radial-gradient(circle at 93% 6%, transparent 0 36px, rgba(255,255,255,0.045) 36px 37px);
       -webkit-mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
-      mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
+              mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
     }
     /* Tiefe: sanftes Vignette */
     .hero-amb { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
@@ -289,11 +295,13 @@
     .marquee { position: relative; overflow: hidden; padding: 46px 0; background: transparent;
       -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
       mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%); }
-    .marquee-track { position: relative; display: flex; align-items: center; gap: 54px; width: max-content; animation: scroll 38s linear infinite; }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
-    .marquee-track span { font-family: var(--font-display); font-style: italic; font-size: clamp(1.4rem, 2.6vw, 2rem); color: var(--ink); white-space: nowrap; opacity: 0.85; letter-spacing: -0.01em; }
-    .marquee-track .sep { font-style: normal; color: var(--state-color); font-size: 1rem; opacity: 1; transition: color 0.8s var(--ease); }
-    @keyframes scroll { to { transform: translateX(-50%); } }
+    .marquee-track { display: flex; width: 100%; }
+    .marquee-group { flex: 0 0 auto; min-width: 100%; display: flex; align-items: center; justify-content: space-around; gap: 54px; padding-right: 54px; animation: scroll 38s linear infinite; will-change: transform; }
+    .marquee:hover .marquee-group { animation-play-state: paused; }
+    .marquee-group span { font-family: var(--font-display); font-style: italic; font-size: clamp(1.4rem, 2.6vw, 2rem); color: var(--ink); white-space: nowrap; opacity: 0.85; letter-spacing: -0.01em; }
+    .marquee-group .sep { font-style: normal; color: var(--state-color); font-size: 1rem; opacity: 1; transition: color 0.8s var(--ease); }
+    @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+    @media (prefers-reduced-motion: reduce) { .marquee-group { animation: none; justify-content: center; } .marquee-track > .marquee-group + .marquee-group { display: none; } }
 
     /* ==========================================================================
        SECTIONS
@@ -531,7 +539,8 @@
       .trust-row { gap: 34px 40px; }
       .bottle-row { gap: 12px; transform: none !important; }
       .bottle-img { height: 180px; }
-      .marquee-track span { font-size: 1.25rem; }
+      .marquee-group span { font-size: 1.25rem; }
+      .marquee-group { gap: 36px; padding-right: 36px; }
     }
     @media (max-width: 430px) {
       .bottle-img { height: 144px; }
@@ -547,6 +556,32 @@
       .bottle-row { transform: none !important; }
       html { scroll-behavior: auto; }
     }
+    /* QUIZ-BAND */
+    .quizband-sec { padding-top: 40px; padding-bottom: 40px; }
+    .quizband { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; background: linear-gradient(135deg, var(--surface-2), var(--surface)); border: 1px solid var(--line-soft); border-radius: 32px; padding: clamp(34px, 5vw, 64px); box-shadow: var(--shadow-soft); }
+    .quizband-glow { position: absolute; top: -40%; right: -10%; width: 50%; height: 180%; background: radial-gradient(circle, var(--glow), transparent 70%); pointer-events: none; }
+    .qb-dots { display: flex; gap: 10px; margin-bottom: 22px; }
+    .qb-dots i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid; display: block; }
+    .qb-dots i:nth-child(1) { border-color: var(--calm-mid); }
+    .qb-dots i:nth-child(2) { border-color: var(--focus-mid); }
+    .qb-dots i:nth-child(3) { border-color: var(--energy-mid); }
+    .qb-dots i:nth-child(4) { border-color: var(--reset-mid); }
+    .qb-text { position: relative; z-index: 1; max-width: 560px; }
+    .qb-text .eyebrow { margin-bottom: 14px; }
+    .qb-text h2 { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.03em; font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.05; margin-bottom: 14px; }
+    .qb-text p { color: var(--muted); font-size: 1.04rem; max-width: 460px; }
+    .quizband .btn { position: relative; z-index: 1; flex: none; }
+
+    /* WARUM CORE ELEMENTS */
+    .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 18px; }
+    .why-card { background: var(--bg-pure); border: 1px solid var(--line-soft); border-radius: 24px; padding: 34px 28px; box-shadow: var(--shadow-soft); transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+    .why-card:hover { transform: translateY(-6px); box-shadow: 0 18px 44px -14px rgba(0,0,0,0.16); }
+    .why-ic { width: 56px; height: 56px; border-radius: 16px; background: var(--surface-2); display: flex; align-items: center; justify-content: center; margin-bottom: 22px; color: var(--accent); }
+    .why-ic svg { width: 28px; height: 28px; }
+    .why-card h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.32rem; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .why-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.65; }
+    @media (max-width: 980px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } .quizband .btn { width: 100%; } }
   </style>
 </head>
 <body>
@@ -578,6 +613,7 @@
     <a href="index.html" aria-current="page">Das Ritual</a>
     <a href="elements.html">Elements</a>
     <a href="vision.html">Vision</a>
+    <a href="quiz.html">Quiz</a>
     <a href="#" class="cart-btn" id="openCartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H3"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>Warenkorb (<span id="cartCount">0</span>)</a>
   </nav>
   <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="siteNav"><span></span><span></span><span></span></button>
@@ -642,14 +678,18 @@
 
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>Choose your state</span><span class="sep">◎</span>
-      <span>Designed for real life</span><span class="sep">◎</span>
-      <span>Press into balance</span><span class="sep">◎</span>
-      <span>Glas statt Plastik</span><span class="sep">◎</span>
-      <span>Choose your state</span><span class="sep">◎</span>
-      <span>Designed for real life</span><span class="sep">◎</span>
-      <span>Press into balance</span><span class="sep">◎</span>
-      <span>Glas statt Plastik</span><span class="sep">◎</span>
+      <div class="marquee-group">
+        <span>Choose your state</span><span class="sep">◎</span>
+        <span>Designed for real life</span><span class="sep">◎</span>
+        <span>Press into balance</span><span class="sep">◎</span>
+        <span>Glas statt Plastik</span><span class="sep">◎</span>
+      </div>
+      <div class="marquee-group">
+        <span>Choose your state</span><span class="sep">◎</span>
+        <span>Designed for real life</span><span class="sep">◎</span>
+        <span>Press into balance</span><span class="sep">◎</span>
+        <span>Glas statt Plastik</span><span class="sep">◎</span>
+      </div>
     </div>
   </div>
 
@@ -660,46 +700,19 @@
       <p class="reveal d1">Vier funktionale Drinks. Reine Inhaltsstoffe, ehrlich deklariert — keine Heilversprechen.</p>
     </div>
 
-    <div class="product-grid">
-      <a href="elements.html#focus" class="product-card reveal" style="--c-light: var(--focus-light); --c-mid: var(--focus-mid); --c-dark: var(--focus-dark);">
-        <div class="pc-bottle"><span class="pile"></span>
-          <span class="bottle"><span class="bottle-float"><img class="bottle-img" src="bottle-focus.png" alt="Core Elements FOCUS Flasche" decoding="async"></span></span>
-        </div>
-        <div class="pc-top"><h3>FOCUS</h3><span class="pc-idx">01</span></div>
-        <p class="pc-desc">Für kognitiven Anspruch und mentale Klarheit.</p>
-        <ul class="ing-list"><li>L-Theanin</li><li>B-Vitamine</li><li>Eisen</li></ul>
-        <span class="pc-cta">Mehr erfahren</span>
-      </a>
+    <div class="product-grid" id="ce-feature-cards"></div>
+  </section>
 
-      <a href="elements.html#energy" class="product-card reveal d1" style="--c-light: var(--energy-light); --c-mid: var(--energy-mid); --c-dark: var(--energy-dark);">
-        <div class="pc-bottle"><span class="pile"></span>
-          <span class="bottle"><span class="bottle-float"><img class="bottle-img" src="bottle-energy.png" alt="Core Elements ENERGY Flasche" decoding="async"></span></span>
-        </div>
-        <div class="pc-top"><h3>ENERGY</h3><span class="pc-idx">02</span></div>
-        <p class="pc-desc">Für natürliche Energie und Leistungsfähigkeit.</p>
-        <ul class="ing-list"><li>Taurin</li><li>Guarana</li><li>Natürliches Koffein</li></ul>
-        <span class="pc-cta">Mehr erfahren</span>
-      </a>
-
-      <a href="elements.html#calm" class="product-card reveal d2" style="--c-light: var(--calm-light); --c-mid: var(--calm-mid); --c-dark: var(--calm-dark);">
-        <div class="pc-bottle"><span class="pile"></span>
-          <span class="bottle"><span class="bottle-float"><img class="bottle-img" src="bottle-calm.png" alt="Core Elements CALM Flasche" decoding="async"></span></span>
-        </div>
-        <div class="pc-top"><h3>CALM</h3><span class="pc-idx">03</span></div>
-        <p class="pc-desc">Für Balance und innere Ruhe.</p>
-        <ul class="ing-list"><li>Ashwagandha</li><li>Magnesium</li><li>L-Theanin</li></ul>
-        <span class="pc-cta">Mehr erfahren</span>
-      </a>
-
-      <a href="elements.html#reset" class="product-card reveal d3" style="--c-light: var(--reset-light); --c-mid: var(--reset-mid); --c-dark: var(--reset-dark);">
-        <div class="pc-bottle"><span class="pile"></span>
-          <span class="bottle"><span class="bottle-float"><img class="bottle-img" src="bottle-reset.png" alt="Core Elements RESET Flasche" decoding="async"></span></span>
-        </div>
-        <div class="pc-top"><h3>RESET</h3><span class="pc-idx">04</span></div>
-        <p class="pc-desc">Für Regeneration und einen klaren Kopf.</p>
-        <ul class="ing-list"><li>Elektrolyte</li><li>Magnesium</li><li>Zink</li></ul>
-        <span class="pc-cta">Mehr erfahren</span>
-      </a>
+  <section class="section quizband-sec">
+    <div class="quizband reveal">
+      <div class="quizband-glow"></div>
+      <div class="qb-text">
+        <div class="qb-dots"><i></i><i></i><i></i><i></i></div>
+        <span class="eyebrow">Noch unsicher?</span>
+        <h2>Finde deinen State<br>in unter einer Minute.</h2>
+        <p>Vier kurze Fragen, ein klares Ergebnis. Wir empfehlen dir den Core, der zu deinem Alltag passt.</p>
+      </div>
+      <a href="quiz.html" class="btn"><span class="lbl">Quiz starten</span> <span class="arrow">→</span></a>
     </div>
   </section>
 
@@ -757,7 +770,7 @@
       </div>
 
       <div class="ritual-facts reveal d1">
-        <div class="fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg></span><span><b>100% Glas</b><span>Nachhaltig &amp; recyclebar</span></span></div>
+        <div class="fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg></span><span><b>100% Glas</b><span>Nachhaltig &amp; recycelbar</span></span></div>
         <div class="fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/></svg></span><span><b>Kein Plastik</b><span>Im Produkt — nur Glas &amp; Bio-Cap</span></span></div>
         <div class="fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><path d="M12 18v3"/><circle cx="12" cy="12" r="4"/><path d="M5 12H2"/><path d="M22 12h-3"/></svg></span><span><b>Patentiertes System</b><span>Für maximale Frische</span></span></div>
       </div>
@@ -789,6 +802,36 @@
     </div>
   </section>
 
+  <section class="section why-sec">
+    <div class="section-head">
+      <span class="eyebrow reveal">Warum Core Elements</span>
+      <h2 class="reveal d1">Durchdacht bis<br>ins kleinste Detail.</h2>
+      <p class="reveal d1">Kein lautes Versprechen — sondern ein System, das auf Frische, Ehrlichkeit und Nachhaltigkeit gebaut ist.</p>
+    </div>
+    <div class="why-grid">
+      <article class="why-card reveal">
+        <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 6.5 5 9.5A5 5 0 0 1 7 12.5C7 9.5 9 7 12 3Z"/><path d="M12 3v0"/></svg></div>
+        <h3>Frisch auf Knopfdruck</h3>
+        <p>Der Core-Cap hält die Wirkstoffe trocken und gibt sie erst beim Trinken frei. Nichts ist vorgemischt, nichts verliert an Wirkung.</p>
+      </article>
+      <article class="why-card reveal d1">
+        <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M10 2v3.5L7 10v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V10l-3-4.5V2"/><path d="M7 14h10"/></svg></div>
+        <h3>Glas statt Plastik</h3>
+        <p>Langlebiges Borosilikatglas, immer wieder befüllbar. Kein Einweg, kein Mikroplastik — der Cap selbst ist biologisch abbaubar.</p>
+      </article>
+      <article class="why-card reveal d2">
+        <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h10M4 18h7"/><path d="m16 16 2 2 4-4"/></svg></div>
+        <h3>Ehrlich dosiert</h3>
+        <p>Jede Zutat ist klar deklariert — Menge, Rolle, Herkunft. Kein versteckter Zucker, keine Füllstoffe, keine Grauzonen.</p>
+      </article>
+      <article class="why-card reveal d3">
+        <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Ohne Heilversprechen</h3>
+        <p>Core Elements ist ein Lebensmittel, kein Wundermittel. Wir unterstützen deinen Alltag — und bleiben dabei ehrlich.</p>
+      </article>
+    </div>
+  </section>
+
   <section class="final-cta">
     <h2 class="reveal">Finde deinen State.<br>Jeden Tag.</h2>
     <p class="cta-sub reveal d1">Du musst nicht perfekt funktionieren — aber du kannst dich unterstützen.</p>
@@ -803,18 +846,18 @@
   </section>
 </main>
 
-<section class="newsletter">
-  <div class="nl-inner">
-    <span class="eyebrow">Werde Teil von Core Elements</span>
-    <h2>10 % auf deine <em>erste Bestellung</em>.</h2>
-    <p>Trag dich ein für ruhige Updates, neue Elements und exklusive Angebote — kein Spam, nur das, was zählt.</p>
-    <form class="nl-form" id="nlForm" novalidate>
-      <input type="email" id="nlEmail" placeholder="Deine E-Mail-Adresse" aria-label="E-Mail-Adresse" required>
-      <button type="submit">Code sichern →</button>
-    </form>
-    <span class="nl-note" id="nlNote">Jederzeit abbestellbar. Deine Daten behandeln wir mit Sorgfalt.</span>
-  </div>
-</section>
+  <section class="newsletter">
+    <div class="nl-inner">
+      <span class="eyebrow">Werde Teil von Core Elements</span>
+      <h2>10 % auf deine <em>erste Bestellung</em>.</h2>
+      <p>Trag dich ein für ruhige Updates, neue Elements und exklusive Angebote — kein Spam, nur das, was zählt.</p>
+      <form class="nl-form" id="nlForm" novalidate>
+        <input type="email" id="nlEmail" placeholder="Deine E-Mail-Adresse" aria-label="E-Mail-Adresse" required>
+        <button type="submit">Code sichern →</button>
+      </form>
+      <span class="nl-note" id="nlNote">Jederzeit abbestellbar. Deine Daten behandeln wir mit Sorgfalt.</span>
+    </div>
+  </section>
 
 <footer class="site-footer">
   <div class="footer-grid">
@@ -825,9 +868,13 @@
     <div class="footer-mid">
       <a href="index.html">Das Ritual</a>
       <a href="elements.html">Elements</a>
+      <a href="quiz.html">Quiz</a>
       <a href="vision.html">Vision</a>
+      <a href="faq.html">FAQ</a>
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
+      <a href="agb.html">AGB</a>
+      <a href="widerruf.html">Widerruf</a>
     </div>
     <div class="footer-social">
       <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="0.6"/></svg></a>
@@ -837,11 +884,15 @@
   </div>
   <div class="footer-copy">&copy; 2026 Core Elements. Dein inneres Gleichgewicht auf Knopfdruck.</div>
 </footer>
+  <script src="core.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Produktkarten zentral aus dem Katalog (core.js) erzeugen
+    if (window.Core) Core.renderFeatureCards('ce-feature-cards');
 
     // ==========================================
     // DATA & STATE
@@ -1071,34 +1122,34 @@
     }
 
     /* Scroll Reveals */
-    var filmSound = document.getElementById('filmSound');
-    var filmVideo = document.querySelector('.film-video');
-    if (filmSound && filmVideo) {
-      filmSound.addEventListener('click', function () {
-        filmVideo.muted = !filmVideo.muted;
-        filmSound.classList.toggle('on', !filmVideo.muted);
-        filmSound.setAttribute('aria-label', filmVideo.muted ? 'Ton einschalten' : 'Ton ausschalten');
-        if (!filmVideo.muted) { var p = filmVideo.play(); if (p && p.catch) p.catch(function(){}); }
-      });
-    }
+          var filmSound = document.getElementById('filmSound');
+      var filmVideo = document.querySelector('.film-video');
+      if (filmSound && filmVideo) {
+        filmSound.addEventListener('click', function () {
+          filmVideo.muted = !filmVideo.muted;
+          filmSound.classList.toggle('on', !filmVideo.muted);
+          filmSound.setAttribute('aria-label', filmVideo.muted ? 'Ton einschalten' : 'Ton ausschalten');
+          if (!filmVideo.muted) { var p = filmVideo.play(); if (p && p.catch) p.catch(function(){}); }
+        });
+      }
 
-    var nlForm = document.getElementById('nlForm');
-    if (nlForm) {
-      nlForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var email = document.getElementById('nlEmail');
-        var note = document.getElementById('nlNote');
-        if (email && email.value.indexOf('@') > 0 && email.value.lastIndexOf('.') > email.value.indexOf('@') + 1) {
-          nlForm.innerHTML = '<p class="nl-success">Willkommen an Bord — dein 10 %-Code ist unterwegs. ✦</p>';
-          if (note) note.textContent = '';
-        } else {
-          if (note) note.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
-          if (email) email.focus();
-        }
-      });
-    }
+      var nlForm = document.getElementById('nlForm');
+      if (nlForm) {
+        nlForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var email = document.getElementById('nlEmail');
+          var note = document.getElementById('nlNote');
+          if (email && email.value.indexOf('@') > 0 && email.value.lastIndexOf('.') > email.value.indexOf('@') + 1) {
+            nlForm.innerHTML = '<p class="nl-success">Willkommen an Bord — dein 10 %-Code ist unterwegs. ✦</p>';
+            if (note) note.textContent = '';
+          } else {
+            if (note) note.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+            if (email) email.focus();
+          }
+        });
+      }
 
-    var reveals = document.querySelectorAll('.reveal:not(.in)');
+      var reveals = document.querySelectorAll('.reveal:not(.in)');
     if ('IntersectionObserver' in window && !reduce) {
       var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
       reveals.forEach(function (el) { io.observe(el); });

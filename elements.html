@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Core Elements — Elements</title>
+  <meta name="description" content="Entdecke alle vier Core Elements — CALM, FOCUS, ENERGY, RESET. Flasche, Cap oder Komplett-Set, einmalig oder im Abo.">
+  <meta property="og:title" content="Core Elements">
+  <meta property="og:description" content="Entdecke alle vier Core Elements — CALM, FOCUS, ENERGY, RESET. Flasche, Cap oder Komplett-Set, einmalig oder im Abo.">
+  <meta property="og:image" content="og-core.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo-color.png">
   <meta name="description" content="CALM, FOCUS, ENERGY, RESET. Vier funktionale Drinks mit ehrlichen Inhaltsstoffen — wähle deinen Zustand.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,7 +186,7 @@
         repeating-radial-gradient(circle at 14% 90%, transparent 0 48px, rgba(255,255,255,0.05) 48px 49px),
         repeating-radial-gradient(circle at 93% 8%, transparent 0 36px, rgba(255,255,255,0.045) 36px 37px);
       -webkit-mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
-      mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
+              mask-image: radial-gradient(130% 120% at 50% 45%, #000 35%, transparent 88%);
     }
     .explorer::after {
       content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
@@ -230,6 +236,14 @@
     .vbtn[aria-pressed="true"] { background: #fff; border-color: #fff; box-shadow: 0 10px 26px rgba(0,0,0,0.25); }
     .vbtn[aria-pressed="true"] .vt-label { color: #111; }
     .vbtn[aria-pressed="true"] .vt-sub { color: rgba(0,0,0,0.5); }
+    .buymode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 22px; }
+    .bm-btn { position: relative; text-align: left; padding: 14px 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--bg-pure); cursor: pointer; display: flex; flex-direction: column; gap: 3px; transition: border-color 0.35s var(--ease), background 0.35s var(--ease), transform 0.35s var(--ease); }
+    .bm-btn:hover { border-color: rgba(111,138,102,0.55); transform: translateY(-2px); }
+    .bm-btn .bm-t { font-weight: 600; font-size: 0.92rem; }
+    .bm-btn .bm-s { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.04em; color: var(--muted); line-height: 1.4; }
+    .bm-btn[aria-pressed="true"] { border-color: var(--state-color, var(--accent)); background: var(--surface-2); box-shadow: 0 0 0 3px var(--glow); }
+    .bm-badge { position: absolute; top: 12px; right: 14px; font-family: var(--font-mono); font-size: 0.58rem; font-weight: 500; letter-spacing: 0.04em; color: #fff; background: var(--state-color, var(--accent)); border-radius: 100px; padding: 3px 8px; }
+    .explorer.neutral .buymode { display: none; }
     .explorer.neutral .variant-toggle { display: none; }
     .vbtn-badge { position: absolute; top: -9px; right: 10px; background: var(--state-bright); color: #1a1a1a; font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; font-weight: 700; box-shadow: 0 5px 14px rgba(0,0,0,0.35); transition: background 0.7s var(--ease); }
     /* Kauf-Vertrauenssignale */
@@ -435,24 +449,6 @@
 </head>
 <body>
 
-<div class="cart-overlay" id="cartOverlay"></div>
-<div class="cart-panel" id="cartPanel">
-  <div class="cart-header">
-    <h3>Warenkorb</h3>
-    <button class="cart-close" id="cartClose" aria-label="Warenkorb schließen">×</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty">Dein Warenkorb ist leer.</div>
-  </div>
-  <div class="cart-footer">
-    <div class="cart-total">
-      <span>Gesamt</span>
-      <span id="cartTotalPrice">0,00 €</span>
-    </div>
-    <button class="btn cart-checkout-btn"><span class="lbl">Zur Kasse gehen</span> <span class="arrow">→</span></button>
-  </div>
-</div>
-
 <header class="site-header" id="header">
   <a href="index.html" class="brand">
     <span class="mark"><img class="mk mk-light" src="logo-white.png" alt="Core Elements"><img class="mk mk-dark" src="logo-color.png" alt=""></span>
@@ -462,6 +458,7 @@
     <a href="index.html">Das Ritual</a>
     <a href="elements.html" aria-current="page">Elements</a>
     <a href="vision.html">Vision</a>
+    <a href="quiz.html">Quiz</a>
     <a class="cart-btn" id="openCartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H3"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>Warenkorb (<span id="cartCount">0</span>)</a>
   </nav>
   <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="siteNav"><span></span><span></span><span></span></button>
@@ -469,12 +466,7 @@
 
 <main>
   <section class="explorer neutral" id="explorer">
-    <div class="explorer-tabs" role="tablist" aria-label="Element wählen">
-      <button class="tab" role="tab" data-state="calm"   aria-selected="false">Calm</button>
-      <button class="tab" role="tab" data-state="focus"  aria-selected="true">Focus</button>
-      <button class="tab" role="tab" data-state="energy" aria-selected="false">Energy</button>
-      <button class="tab" role="tab" data-state="reset"  aria-selected="false">Reset</button>
-    </div>
+    <div class="explorer-tabs" id="exTabs" role="tablist" aria-label="Element wählen"></div>
 
     <div class="explorer-grid">
       <div class="ex-text">
@@ -485,10 +477,14 @@
         <p class="ex-persona" id="exPersona"></p>
         <div class="variant-toggle" id="variantToggle" role="group" aria-label="Variante wählen">
           <button class="vbtn" data-variant="complete" aria-pressed="true"><span class="vbtn-badge">Beliebt</span><span class="vt-label">Komplett</span><span class="vt-sub">Flasche + Cap</span></button>
-          <button class="vbtn" data-variant="cap" aria-pressed="false"><span class="vt-label">Nur Cap</span><span class="vt-sub">Nachfüllen</span></button>
+          <button class="vbtn" data-variant="cap" aria-pressed="false"><span class="vt-label">Nur Cap</span><span class="vt-sub">4 Stück</span></button>
           <button class="vbtn" data-variant="bottle" aria-pressed="false"><span class="vt-label">Nur Flasche</span><span class="vt-sub">Leeres Glas</span></button>
         </div>
-        <button class="btn" id="addToCartBtn"><span class="lbl">In den Warenkorb — <span id="exPrice">36,90 €</span></span> <span class="arrow">→</span></button>
+        <div class="buymode" id="buyMode" role="group" aria-label="Kaufart wählen">
+          <button class="bm-btn" type="button" data-mode="once" aria-pressed="true"><span class="bm-t">Einmalig kaufen</span><span class="bm-s">Flexibel, ohne Bindung</span></button>
+          <button class="bm-btn" type="button" data-mode="sub" aria-pressed="false"><span class="bm-badge">−15 %</span><span class="bm-t">Im Abo sparen</span><span class="bm-s">Alle 4 Wochen · jederzeit kündbar</span></button>
+        </div>
+        <button class="btn" id="addToCartBtn"><span class="lbl">In den Warenkorb — <span id="exPrice">29,90 €</span></span> <span class="arrow">→</span></button>
         <div class="buy-meta" id="buyMeta">
           <span class="buy-ship">Inkl. MwSt. · Kostenloser Versand ab 49 €</span>
           <div class="buy-trust">
@@ -501,12 +497,7 @@
       </div>
 
       <div class="ex-right">
-        <div class="ex-lineup" id="exLineup" role="group" aria-label="Element wählen">
-          <button class="lineup-btn" data-state="calm"  aria-label="CALM wählen"><img src="bottle-calm.png"  alt="" decoding="async"><span>CALM</span></button>
-          <button class="lineup-btn" data-state="focus" aria-label="FOCUS wählen"><img src="bottle-focus.png" alt="" decoding="async"><span>FOCUS</span></button>
-          <button class="lineup-btn" data-state="energy" aria-label="ENERGY wählen"><img src="bottle-energy.png" alt="" decoding="async"><span>ENERGY</span></button>
-          <button class="lineup-btn" data-state="reset" aria-label="RESET wählen"><img src="bottle-reset.png" alt="" decoding="async"><span>RESET</span></button>
-        </div>
+        <div class="ex-lineup" id="exLineup" role="group" aria-label="Element wählen"></div>
 
         <div class="ex-product">
           <div class="ex-showcase">
@@ -533,20 +524,7 @@
       <h2 class="reveal d1">Vier Elements. Ein System.</h2>
       <p class="reveal d1">Dieselbe Glasflasche, derselbe Core-Cap — vier Zustände. Tipp ein Element an, um es oben zu öffnen.</p>
     </div>
-    <div class="compare-grid">
-      <div class="compare-card reveal" style="--c: var(--calm-mid);" data-jump="calm"><span class="cc-active" aria-hidden="true"></span>
-        <h4>CALM</h4><span class="cc-for">Für den lauten Feierabend</span>
-      </div>
-      <div class="compare-card reveal d1" style="--c: var(--focus-mid);" data-jump="focus"><span class="cc-active" aria-hidden="true"></span>
-        <h4>FOCUS</h4><span class="cc-for">Für die Stunden, die zählen</span>
-      </div>
-      <div class="compare-card reveal d2" style="--c: var(--energy-mid);" data-jump="energy"><span class="cc-active" aria-hidden="true"></span>
-        <h4>ENERGY</h4><span class="cc-for">Für das volle Training</span>
-      </div>
-      <div class="compare-card reveal d3" style="--c: var(--reset-mid);" data-jump="reset"><span class="cc-active" aria-hidden="true"></span>
-        <h4>RESET</h4><span class="cc-for">Für den klaren Neustart</span>
-      </div>
-    </div>
+    <div class="compare-grid" id="compareGrid"></div>
   </section>
 
   <section class="section system" id="system">
@@ -583,18 +561,18 @@
   </section>
 </main>
 
-<section class="newsletter">
-  <div class="nl-inner">
-    <span class="eyebrow">Werde Teil von Core Elements</span>
-    <h2>10 % auf deine <em>erste Bestellung</em>.</h2>
-    <p>Trag dich ein für ruhige Updates, neue Elements und exklusive Angebote — kein Spam, nur das, was zählt.</p>
-    <form class="nl-form" id="nlForm" novalidate>
-      <input type="email" id="nlEmail" placeholder="Deine E-Mail-Adresse" aria-label="E-Mail-Adresse" required>
-      <button type="submit">Code sichern →</button>
-    </form>
-    <span class="nl-note" id="nlNote">Jederzeit abbestellbar. Deine Daten behandeln wir mit Sorgfalt.</span>
-  </div>
-</section>
+  <section class="newsletter">
+    <div class="nl-inner">
+      <span class="eyebrow">Werde Teil von Core Elements</span>
+      <h2>10 % auf deine <em>erste Bestellung</em>.</h2>
+      <p>Trag dich ein für ruhige Updates, neue Elements und exklusive Angebote — kein Spam, nur das, was zählt.</p>
+      <form class="nl-form" id="nlForm" novalidate>
+        <input type="email" id="nlEmail" placeholder="Deine E-Mail-Adresse" aria-label="E-Mail-Adresse" required>
+        <button type="submit">Code sichern →</button>
+      </form>
+      <span class="nl-note" id="nlNote">Jederzeit abbestellbar. Deine Daten behandeln wir mit Sorgfalt.</span>
+    </div>
+  </section>
 
 <footer class="site-footer">
   <div class="footer-grid">
@@ -602,13 +580,7 @@
       <a href="index.html" class="brand"><span class="mark"><img class="mk mk-dark" src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
       <div class="footer-tag">Designed for real life.</div>
     </div>
-    <div class="footer-links">
-      <a href="index.html">Das Ritual</a>
-      <a href="elements.html">Elements</a>
-      <a href="vision.html">Vision</a>
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
-    </div>
+    <div class="footer-links"><a href="index.html">Das Ritual</a><a href="elements.html">Elements</a><a href="quiz.html">Quiz</a><a href="vision.html">Vision</a><a href="faq.html">FAQ</a><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a><a href="widerruf.html">Widerruf</a></div>
     <div class="footer-social">
       <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="0.6"/></svg></a>
       <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v9.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 7a4 4 0 0 0 4 4"/></svg></a>
@@ -618,6 +590,7 @@
   <div class="footer-copy">&copy; 2026 Core Elements. Dein inneres Gleichgewicht auf Knopfdruck.</div>
 </footer>
 
+<script src="core.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -625,66 +598,41 @@
     // ==========================================
     // DATA & STATE (Werte konsistent mit index.html)
     // ==========================================
-    var DATA = {
-      calm: {
-        idx: '01', tagline: 'mit Ashwagandha', name: 'CALM',
-        slogan: 'When everything gets loud.',
-        price: 34.90,
-        color: 'var(--calm-mid)', light: 'var(--calm-light)', dark: 'var(--calm-dark)',
-        lead: 'Wenn der Tag laut war, brauchst du keinen weiteren Reiz — sondern Raum. CALM bringt dich zurück in deinen Rhythmus, sanft und ohne Schwere.',
-        persona: 'Für den Feierabend, an dem der Kopf noch rennt, der Abend aber dir gehört.',
-        note: 'Niedrige Süße · Ohne Zucker',
-        ingredients: [['Ashwagandha','Adaptogen'],['Magnesium','Mineralstoff'],['L-Theanin','Aminosäure'],['Pflanzliche Extrakte','Botanicals']]
-      },
-      focus: {
-        idx: '02', tagline: 'mit Kombucha', name: 'FOCUS',
-        slogan: 'For the hours that matter.',
-        price: 36.90,
-        color: 'var(--focus-mid)', light: 'var(--focus-light)', dark: 'var(--focus-dark)',
-        lead: 'Wenn der Aufgabenberg wächst und die Gedanken springen: FOCUS hält dich bei der Sache — klar, wach und ohne den harten Absturz danach.',
-        persona: 'Für die Person Ende 20, die ihre Steuer endlich angeht. Großer Berg, klarer Kopf.',
-        note: 'Ohne Zucker',
-        ingredients: [['Kombucha','Basis'],['Elektrolyte','Mineralstoffe'],['B-Vitamine','Vitaminkomplex'],['L-Theanin','Aminosäure'],['Eisen','Spurenelement']]
-      },
-      energy: {
-        idx: '03', tagline: 'für den Moment', name: 'ENERGY',
-        slogan: 'Without losing yourself.',
-        price: 32.90,
-        color: 'var(--energy-mid)', light: 'var(--energy-light)', dark: 'var(--energy-dark)',
-        lead: 'Echte Energie, die deinen Körper unterstützt statt ihn auszulaugen. Für den Moment, in dem du wirklich alles gibst.',
-        persona: 'Für das Training, das volle Leistung will — gesund, verträglich, gut für Kopf und Körper.',
-        note: 'Ohne Zucker',
-        ingredients: [['Taurin','Aminosäure'],['Guarana','Botanical'],['Natürliches Koffein','Wachmacher']]
-      },
-      reset: {
-        idx: '04', tagline: 'für die Regeneration', name: 'RESET',
-        slogan: 'Start again.',
-        price: 34.90,
-        color: 'var(--reset-mid)', light: 'var(--reset-light)', dark: 'var(--reset-dark)',
-        lead: 'Nach der Belastung kommt die Regeneration. RESET füllt auf, was der Tag genommen hat — und macht den Kopf frei für den Neuanfang.',
-        persona: 'Für den Morgen danach und jeden Moment, der einen klaren Neustart braucht.',
-        note: 'Ohne Zucker',
-        ingredients: [['Elektrolyte','Mineralstoffe'],['Magnesium','Mineralstoff'],['Zink','Spurenelement']]
-      }
-    };
-
-    var GREEN = { color:'var(--green-mid)', light:'#B9C8B5', dark:'var(--green-dark)', bright:'#C6D4BF', g1:'#6E8A5C', g2:'#44512F', g3:'#1E251A', surface:'#EFF2EC', surface2:'#E5EBDF', glow:'rgba(111,138,102,0.16)' };
-
-    var currentState = null;
-    var currentVariant = 'complete';
-    var CAP_PRICE = 14.90, BOTTLE_PRICE = 22.90;
-    var VARIANTS = {
-      complete: { suffix: '',         tag: 'Flasche + Cap', img: function (k) { return 'bottle-' + k + '.png'; }, price: function (d) { return d.price; } },
-      cap:      { suffix: ' · Cap',     tag: 'Nachfüll-Cap',  img: function (k) { return 'cap-' + k + '.png'; },    price: function () { return CAP_PRICE; } },
-      bottle:   { suffix: ' · Flasche', tag: 'Leere Flasche', img: function (k) { return 'empty-' + k + '.png'; }, price: function () { return BOTTLE_PRICE; } }
-    };
-    var BOTTLE_SPECS = [['Borosilikatglas','Material'],['500 ml','Volumen'],['Spülmaschinenfest','Pflege'],['BPA-frei','Sicherheit']];
-
-    // WARENKORB VIA LOCALSTORAGE LADEN
-    var cart = JSON.parse(localStorage.getItem('ce_cart')) || [];
-
     var rootStyle = document.documentElement.style;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var GREEN = Core.GREEN;
+    var currentState = null, currentVariant = 'complete', currentMode = 'once';
+
+    // Katalog kommt zentral aus core.js
+    var DATA = {};
+    Core.products.forEach(function (p) { DATA[p.id] = p; });
+
+    // Tabs, Lineup & Vergleich datengetrieben erzeugen (neue Produkte erscheinen automatisch)
+    (function buildFromCatalog() {
+      var exTabs = document.getElementById('exTabs');
+      var exLineup = document.getElementById('exLineup');
+      var compareGrid = document.getElementById('compareGrid');
+      Core.products.forEach(function (p, i) {
+        var tab = document.createElement('button');
+        tab.className = 'tab'; tab.setAttribute('role', 'tab'); tab.dataset.state = p.id;
+        tab.setAttribute('aria-selected', 'false');
+        tab.textContent = p.name.charAt(0) + p.name.slice(1).toLowerCase();
+        exTabs.appendChild(tab);
+
+        var lb = document.createElement('button');
+        lb.className = 'lineup-btn'; lb.dataset.state = p.id;
+        lb.setAttribute('aria-label', p.name + ' waehlen');
+        lb.innerHTML = '<img src="bottle-' + p.id + '.png" alt="" decoding="async"><span>' + p.name + '</span>';
+        exLineup.appendChild(lb);
+
+        var cc = document.createElement('div');
+        cc.className = 'compare-card reveal' + (i ? ' d' + Math.min(i, 3) : '');
+        cc.style.setProperty('--c', p.mid);
+        cc.dataset.jump = p.id;
+        cc.innerHTML = '<span class="cc-active" aria-hidden="true"></span><h4>' + p.name + '</h4><span class="cc-for">' + p.forShort + '</span>';
+        compareGrid.appendChild(cc);
+      });
+    })();
 
     // ==========================================
     // ELEMENTS RENDERER
@@ -715,15 +663,10 @@
       if(!d) return;
       currentState = key;
 
-      rootStyle.setProperty('--state-color', d.color);
+      rootStyle.setProperty('--state-color', d.mid);
       rootStyle.setProperty('--state-light', d.light);
       rootStyle.setProperty('--state-dark', d.dark);
-      var GRAD = {
-        focus:  { bright: '#AEC6CF', g1: '#1C8FA0', g2: '#214E5C', g3: '#10202A', surface: '#EFF4F4', surface2: '#E5EEEF', glow: 'rgba(21,127,139,0.16)' },
-        energy: { bright: '#FF8C84', g1: '#E45C54', g2: '#8E2A28', g3: '#2C1112', surface: '#F7EFEE', surface2: '#F1E4E3', glow: 'rgba(217,83,79,0.15)' },
-        calm:   { bright: '#F7D6AD', g1: '#F0A65C', g2: '#946A3D', g3: '#2B2016', surface: '#F7F1E8', surface2: '#F1E6D6', glow: 'rgba(244,157,72,0.17)' },
-        reset:  { bright: '#E4E8E8', g1: '#AEB8B7', g2: '#5C6A6B', g3: '#262C2C', surface: '#F1F3F3', surface2: '#E7ECEC', glow: 'rgba(127,140,141,0.13)' }
-      }[key];
+      var GRAD = d.grad;
       if (GRAD) {
         rootStyle.setProperty('--state-bright', GRAD.bright);
         rootStyle.setProperty('--g1', GRAD.g1);
@@ -761,22 +704,36 @@
 
     function applyVariant() {
       var d = DATA[currentState]; if (!d) return;
-      var v = VARIANTS[currentVariant] || VARIANTS.complete;
+      var v = Core.VARIANTS[currentVariant] || Core.VARIANTS.complete;
       document.querySelectorAll('#variantToggle .vbtn').forEach(function (b) {
         b.setAttribute('aria-pressed', b.dataset.variant === currentVariant ? 'true' : 'false');
       });
-      els.price.textContent = formatPrice(v.price(d));
+      // Abo gibt es nur für Caps: Umschalter nur dort zeigen
+      var bm = document.getElementById('buyMode');
+      if (bm) {
+        if (currentVariant === 'cap') {
+          bm.style.display = 'grid';
+        } else {
+          bm.style.display = 'none';
+          currentMode = 'once';
+          document.querySelectorAll('#buyMode .bm-btn').forEach(function (x) {
+            x.setAttribute('aria-pressed', x.dataset.mode === 'once' ? 'true' : 'false');
+          });
+        }
+      }
+      var basePrice = Core.variantPrice(v.key);
+      els.price.textContent = formatPrice(currentMode === 'sub' ? basePrice * (1 - Core.SUBSCRIPTION.percent) : basePrice);
       if (els.bottleImg) {
-        els.bottleImg.src = v.img(currentState);
+        els.bottleImg.src = v.img(d);
         var sb = els.bottleImg.closest('.showcase-bottle');
         if (sb) sb.classList.toggle('is-cap', currentVariant === 'cap');
       }
       els.specList.innerHTML = '';
       if (currentVariant === 'bottle') {
         els.specLabel.textContent = 'Eigenschaften';
-        els.specCount.textContent = BOTTLE_SPECS.length;
+        els.specCount.textContent = Core.BOTTLE_SPECS.length;
         els.specNote.textContent = 'Nachfüllbar · langlebig';
-        BOTTLE_SPECS.forEach(function (s) {
+        Core.BOTTLE_SPECS.forEach(function (s) {
           var li = document.createElement('li');
           li.innerHTML = '<span>' + s[0] + '</span><span class="role">' + s[1] + '</span>';
           els.specList.appendChild(li);
@@ -799,7 +756,7 @@
 
     function renderNeutral() {
       currentState = null;
-      rootStyle.setProperty('--state-color', GREEN.color);
+      rootStyle.setProperty('--state-color', GREEN.mid);
       rootStyle.setProperty('--state-light', GREEN.light);
       rootStyle.setProperty('--state-dark', GREEN.dark);
       rootStyle.setProperty('--state-bright', GREEN.bright);
@@ -858,104 +815,21 @@
       });
     }
 
-    // ==========================================
-    // WARENKORB LOGIK (LOCALSTORAGE)
-    // ==========================================
-    var cartOverlay = document.getElementById('cartOverlay');
-    var cartPanel = document.getElementById('cartPanel');
-    var cartCountEl = document.getElementById('cartCount');
-    var cartItemsEl = document.getElementById('cartItems');
-    var cartTotalPriceEl = document.getElementById('cartTotalPrice');
-
-    function saveCart() {
-      localStorage.setItem('ce_cart', JSON.stringify(cart));
-    }
-
-    function openCart() {
-      cartOverlay.classList.add('open');
-      cartPanel.classList.add('open');
-    }
-
-    function closeCart() {
-      cartOverlay.classList.remove('open');
-      cartPanel.classList.remove('open');
-    }
-
-    document.getElementById('openCartBtn').addEventListener('click', function(e) { e.preventDefault(); openCart(); });
-    document.getElementById('cartClose').addEventListener('click', closeCart);
-    cartOverlay.addEventListener('click', closeCart);
-
-    function renderCart() {
-      cartItemsEl.innerHTML = '';
-      var totalQty = 0;
-      var totalPrice = 0;
-
-      if (cart.length === 0) {
-        cartItemsEl.innerHTML = '<div class="cart-empty">Dein Warenkorb ist leer.</div>';
-        cartCountEl.textContent = '0';
-        cartTotalPriceEl.textContent = '0,00 €';
-        return;
-      }
-
-      cart.forEach(function(item) {
-        totalQty += item.qty;
-        totalPrice += (item.qty * item.price);
-
-        var itemEl = document.createElement('div');
-        itemEl.className = 'cart-item';
-        itemEl.innerHTML = `
-            <img src="${item.img}" alt="${item.name}">
-            <div class="cart-item-info">
-              <div class="cart-item-title">${item.name}</div>
-              <div class="cart-item-price">${formatPrice(item.price)}</div>
-            </div>
-            <div class="cart-qty-ctrl">
-              <button onclick="changeCartQty('${item.id}', -1)">–</button>
-              <span>${item.qty}</span>
-              <button onclick="changeCartQty('${item.id}', 1)">+</button>
-            </div>
-          `;
-        cartItemsEl.appendChild(itemEl);
+    // KAUFART (Einmalig / Abo)
+    document.querySelectorAll('#buyMode .bm-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        currentMode = b.dataset.mode;
+        document.querySelectorAll('#buyMode .bm-btn').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        if (currentState) applyVariant();
       });
+    });
 
-      cartCountEl.textContent = totalQty;
-      cartTotalPriceEl.textContent = formatPrice(totalPrice);
-    }
-
-    // Global zugänglich für Inline-OnClick
-    window.changeCartQty = function(id, delta) {
-      var item = cart.find(i => i.id === id);
-      if (item) {
-        item.qty += delta;
-        if (item.qty <= 0) {
-          cart = cart.filter(i => i.id !== id);
-        }
-      }
-      saveCart();
-      renderCart();
-    };
-
-    document.getElementById('addToCartBtn').addEventListener('click', function() {
+    // ==========================================
+    // IN DEN WARENKORB (zentral via core.js)
+    // ==========================================
+    document.getElementById('addToCartBtn').addEventListener('click', function () {
       if (!currentState) return;
-      var d = DATA[currentState];
-      var v = VARIANTS[currentVariant] || VARIANTS.complete;
-      var id = currentState + '-' + currentVariant;
-      var existingItem = cart.find(i => i.id === id);
-
-      if (existingItem) {
-        existingItem.qty += 1;
-      } else {
-        cart.push({
-          id: id,
-          name: d.name + v.suffix,
-          price: v.price(d),
-          qty: 1,
-          img: v.img(currentState)
-        });
-      }
-      saveCart();
-      renderCart();
-      openCart();
+      Core.add(currentState, currentVariant, 1, currentMode === 'sub');
     });
 
 
@@ -965,8 +839,6 @@
     var initial = (location.hash || '').replace('#', '');
     if (DATA[initial]) { render(initial); } else { renderNeutral(); }
 
-    // Warenkorb initial aus dem LocalStorage rendern
-    renderCart();
 
     var header = document.getElementById('header');
     window.addEventListener('scroll', function () { header.classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
@@ -986,23 +858,23 @@
       });
     }
 
-    var nlForm = document.getElementById('nlForm');
-    if (nlForm) {
-      nlForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var email = document.getElementById('nlEmail');
-        var note = document.getElementById('nlNote');
-        if (email && email.value.indexOf('@') > 0 && email.value.lastIndexOf('.') > email.value.indexOf('@') + 1) {
-          nlForm.innerHTML = '<p class="nl-success">Willkommen an Bord — dein 10 %-Code ist unterwegs. ✦</p>';
-          if (note) note.textContent = '';
-        } else {
-          if (note) note.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
-          if (email) email.focus();
-        }
-      });
-    }
+          var nlForm = document.getElementById('nlForm');
+      if (nlForm) {
+        nlForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var email = document.getElementById('nlEmail');
+          var note = document.getElementById('nlNote');
+          if (email && email.value.indexOf('@') > 0 && email.value.lastIndexOf('.') > email.value.indexOf('@') + 1) {
+            nlForm.innerHTML = '<p class="nl-success">Willkommen an Bord — dein 10 %-Code ist unterwegs. ✦</p>';
+            if (note) note.textContent = '';
+          } else {
+            if (note) note.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+            if (email) email.focus();
+          }
+        });
+      }
 
-    var reveals = document.querySelectorAll('.reveal:not(.in)');
+      var reveals = document.querySelectorAll('.reveal:not(.in)');
     if ('IntersectionObserver' in window && !reduce) {
       var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
       reveals.forEach(function (el) { io.observe(el); });

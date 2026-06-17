@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Elements — Finde deinen State</title>
+  <meta name="description" content="Vier Fragen, ein Ergebnis: Finde heraus, welcher Core-Elements-State zu deinem Alltag passt.">
+  <meta property="og:title" content="Finde deinen State — Core Elements">
+  <meta property="og:description" content="Vier Fragen, ein Ergebnis. Welcher State passt zu dir?">
+  <meta property="og:image" content="og-core.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo-color.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F4F2EE; --bg-warm: #FBFAF7; --bg-pure: #FFFFFF;
+      --ink: #111112; --muted: #666668; --faint: #9A9A98;
+      --line: rgba(17,17,18,0.08); --line-soft: rgba(17,17,18,0.04);
+      --accent: #6F8A66; --surface: #EFF2EC; --surface-2: #E5EBDF; --glow: rgba(111,138,102,0.16);
+      --calm-mid:#F49D48; --focus-mid:#157F8B; --energy-mid:#D9534F; --reset-mid:#7F8C8D;
+      --calm-light:#F5D0A9; --focus-light:#AEC6CF; --energy-light:#FF6B6B; --reset-light:#EAECEE;
+      --calm-dark:#8A6D51; --focus-dark:#2C3E50; --energy-dark:#AD2828; --reset-dark:#525252;
+      --green-mid:#6F8A66; --green-dark:#3D4A30;
+      --state: var(--accent); --state-soft: var(--surface-2);
+      --font-display:"Fraunces",Georgia,serif;
+      --font-body:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+      --header-h:72px; --ease:cubic-bezier(0.25,1,0.3,1);
+      --shadow-soft:0 2px 8px -2px rgba(0,0,0,0.04),0 16px 40px -12px rgba(0,0,0,0.12);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-body);color:var(--ink);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;}
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    a{color:inherit;}
+
+    .site-header{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 48px;height:var(--header-h);background:rgba(244,242,238,0.82);backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px);border-bottom:1px solid var(--line-soft);z-index:1000;}
+    .brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);z-index:1001;}
+    .brand .mark{width:28px;height:28px;}.brand .mark img{width:100%;height:100%;object-fit:contain;display:block;}
+    .brand .name{font-weight:700;font-size:0.94rem;letter-spacing:0.18em;}
+    .site-nav{display:flex;gap:40px;align-items:center;}
+    .site-nav a{text-decoration:none;color:var(--ink);font-size:0.88rem;font-weight:500;opacity:0.6;position:relative;padding:4px 0;transition:opacity 0.4s var(--ease);cursor:pointer;}
+    .site-nav a::after{content:'';position:absolute;left:0;bottom:-4px;height:1.5px;width:0;background:var(--ink);transition:width 0.4s var(--ease);}
+    .site-nav a:hover{opacity:1;}.site-nav a:hover::after,.site-nav a[aria-current="page"]::after{width:100%;}
+    .site-nav a[aria-current="page"]{opacity:1;}
+    .cart-btn{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;display:inline-flex;align-items:center;gap:8px;opacity:0.6;text-decoration:none;cursor:pointer;}
+    .cart-btn:hover{opacity:1;}.cart-btn svg{width:16px;height:16px;}
+    .nav-toggle{display:none;width:40px;height:40px;border:none;background:transparent;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:1001;}
+    .nav-toggle span{display:block;width:22px;height:1.6px;background:var(--ink);border-radius:2px;transition:transform .35s var(--ease),opacity .3s ease;}
+    .site-header.open .nav-toggle span:nth-child(1){transform:translateY(6.6px) rotate(45deg);}
+    .site-header.open .nav-toggle span:nth-child(2){opacity:0;}
+    .site-header.open .nav-toggle span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg);}
+
+    .quiz-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:calc(var(--header-h) + 60px) 6% 80px;position:relative;}
+    .aura{position:fixed;inset:0;z-index:-1;background:radial-gradient(60% 50% at 50% 18%, var(--glow), transparent 70%);transition:background 0.8s var(--ease);pointer-events:none;}
+    .stage{width:100%;max-width:760px;}
+    .panel{display:none;animation:fadeUp 0.6s var(--ease) both;}
+    .panel.active{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+
+    .eyebrow{font-family:var(--font-mono);font-size:0.68rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:22px;display:inline-flex;align-items:center;gap:14px;}
+    .eyebrow::before{content:'';width:32px;height:1px;background:var(--state);transition:background 0.6s ease;}
+
+    /* INTRO */
+    .intro{text-align:center;}
+    .intro h1{font-family:var(--font-display);font-weight:300;letter-spacing:-0.035em;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.0;margin-bottom:20px;}
+    .intro h1 em{font-style:italic;color:var(--accent);}
+    .intro p{color:var(--muted);font-size:1.12rem;max-width:480px;margin:0 auto 14px;}
+    .intro .meta{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);margin-bottom:36px;}
+    .rings{display:flex;justify-content:center;gap:18px;margin:8px 0 36px;}
+    .rings i{width:34px;height:34px;border-radius:50%;border:2px solid;display:block;animation:floaty 4s ease-in-out infinite;}
+    .rings i:nth-child(1){border-color:var(--calm-mid);animation-delay:0s;}
+    .rings i:nth-child(2){border-color:var(--focus-mid);animation-delay:.3s;}
+    .rings i:nth-child(3){border-color:var(--energy-mid);animation-delay:.6s;}
+    .rings i:nth-child(4){border-color:var(--reset-mid);animation-delay:.9s;}
+    @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(180deg,#2A2A2C,#111112);color:#fff;padding:16px 32px;border-radius:100px;text-decoration:none;font-weight:500;font-size:0.96rem;border:none;cursor:pointer;transition:transform 0.5s var(--ease),box-shadow 0.5s var(--ease);box-shadow:inset 0 1px 1px rgba(255,255,255,0.15),0 4px 12px rgba(0,0,0,0.15);}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px -8px rgba(0,0,0,0.3);}
+    .btn .arrow{transition:transform 0.5s var(--ease);}.btn:hover .arrow{transform:translateX(6px);}
+    .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none;}
+    .btn-ghost:hover{border-color:var(--ink);box-shadow:none;}
+    .btn-state{background:linear-gradient(180deg,var(--state),color-mix(in srgb,var(--state),#000 22%));}
+
+    /* PROGRESS */
+    .progress{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
+    .progress .bar{flex:1;height:4px;border-radius:100px;background:rgba(17,17,18,0.08);overflow:hidden;}
+    .progress .bar i{display:block;height:100%;width:0;border-radius:100px;background:var(--state);transition:width 0.5s var(--ease),background 0.5s ease;}
+    .progress .step{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.1em;color:var(--muted);white-space:nowrap;}
+
+    .q h2{font-family:var(--font-display);font-weight:400;font-size:clamp(1.7rem,4vw,2.5rem);letter-spacing:-0.02em;line-height:1.1;margin-bottom:28px;}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .opt{display:flex;align-items:center;gap:16px;text-align:left;padding:20px 22px;border-radius:18px;border:1px solid var(--line);background:var(--bg-pure);cursor:pointer;font-size:1rem;color:var(--ink);transition:border-color 0.35s var(--ease),transform 0.35s var(--ease),box-shadow 0.35s var(--ease);}
+    .opt:hover{transform:translateY(-3px);box-shadow:var(--shadow-soft);border-color:rgba(17,17,18,0.18);}
+    .opt .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid var(--od,var(--accent));transition:background 0.3s;}
+    .opt:hover .dot{background:var(--od,var(--accent));}
+    .opt .ot{line-height:1.4;}
+
+    .back{margin-top:26px;background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:inline-flex;gap:8px;align-items:center;transition:color 0.3s;}
+    .back:hover{color:var(--ink);}
+
+    /* RESULT */
+    .result{display:grid;grid-template-columns:0.9fr 1.1fr;gap:40px;align-items:center;background:var(--bg-pure);border:1px solid var(--line-soft);border-radius:30px;padding:clamp(28px,4vw,52px);box-shadow:var(--shadow-soft);}
+    .result-visual{position:relative;display:flex;align-items:center;justify-content:center;min-height:300px;}
+    .result-visual::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,var(--state),transparent 68%);opacity:0.22;}
+    .result-visual img{height:330px;position:relative;z-index:1;filter:drop-shadow(0 30px 40px rgba(0,0,0,0.22));animation:floaty 6s ease-in-out infinite;}
+    .result-tag{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--state);margin-bottom:12px;}
+    .result h2{font-family:var(--font-display);font-weight:300;font-size:clamp(2.4rem,5vw,3.4rem);letter-spacing:-0.03em;line-height:1;margin-bottom:8px;}
+    .result .slogan{font-family:var(--font-display);font-style:italic;color:var(--muted);font-size:1.2rem;margin-bottom:18px;}
+    .result .lead{color:var(--muted);margin-bottom:14px;}
+    .result .price{font-family:var(--font-mono);font-size:0.82rem;color:var(--ink);margin-bottom:24px;}
+    .result-actions{display:flex;flex-wrap:wrap;gap:12px;}
+    .result-again{text-align:center;margin-top:26px;}
+
+    .site-footer{padding:70px 5.5% 60px;background:var(--surface);border-top:1px solid var(--line-soft);}
+    .footer-grid{display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;max-width:1600px;margin:0 auto;}
+    .footer-tag{font-family:var(--font-display);font-style:italic;color:var(--muted);margin-top:12px;font-size:1.05rem;}
+    .footer-links{display:flex;gap:26px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;flex-wrap:wrap;max-width:680px;justify-content:flex-end;}
+    .footer-links a{text-decoration:none;opacity:0.62;transition:opacity 0.3s;}
+    .footer-links a:hover{opacity:1;}
+    .footer-copy{font-family:var(--font-mono);font-size:0.68rem;color:var(--faint);margin:48px auto 0;max-width:1600px;}
+    a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+    @media (max-width:760px){
+      .site-header{padding:0 24px;}
+      .nav-toggle{display:flex;}
+      .site-nav{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:8px 24px 20px;background:rgba(244,242,238,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--line-soft);transform:translateY(-16px);opacity:0;pointer-events:none;transition:transform .4s var(--ease),opacity .4s var(--ease);}
+      .site-header.open .site-nav{transform:none;opacity:1;pointer-events:auto;}
+      .site-nav a{padding:16px 2px;font-size:1.05rem;opacity:0.9;border-bottom:1px solid var(--line-soft);}
+      .site-nav a::after{display:none;}
+      .options{grid-template-columns:1fr;}
+      .result{grid-template-columns:1fr;text-align:center;}
+      .result-actions{justify-content:center;}
+      .result-visual{min-height:240px;}.result-visual img{height:260px;}
+      .footer-links{justify-content:flex-start;}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="header">
+    <a href="index.html" class="brand"><span class="mark"><img src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html">Das Ritual</a>
+      <a href="elements.html">Elements</a>
+      <a href="vision.html">Vision</a>
+      <a href="quiz.html" aria-current="page">Quiz</a>
+      <a class="cart-btn" id="openCartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H3"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>Warenkorb (<span id="cartCount">0</span>)</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="siteNav"><span></span><span></span><span></span></button>
+  </header>
+
+  <div class="aura" id="aura"></div>
+
+  <main class="quiz-wrap">
+    <div class="stage" id="stage"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand"><span class="mark"><img src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
+        <div class="footer-tag">Designed for real life.</div>
+      </div>
+      <nav class="footer-links">
+        <a href="index.html">Das Ritual</a><a href="elements.html">Elements</a><a href="quiz.html">Quiz</a><a href="vision.html">Vision</a><a href="faq.html">FAQ</a><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a><a href="widerruf.html">Widerruf</a>
+      </nav>
+    </div>
+    <div class="footer-copy">&copy; 2026 Core Elements. Dein inneres Gleichgewicht auf Knopfdruck.</div>
+  </footer>
+
+  <script src="core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var stage = document.getElementById('stage');
+      var aura = document.getElementById('aura');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var QUESTIONS = [
+        { q: 'Wie fühlt sich dein typischer Tag an?', opts: [
+          { t: 'Voll mit Terminen und Reizen', s: 'focus' },
+          { t: 'Hektisch — ich gebe Vollgas', s: 'energy' },
+          { t: 'Laut, ich komme schwer runter', s: 'calm' },
+          { t: 'Erschöpft, ich laufe auf Reserve', s: 'reset' } ] },
+        { q: 'Was brauchst du gerade am meisten?', opts: [
+          { t: 'Klarheit und Konzentration', s: 'focus' },
+          { t: 'Antrieb und Energie', s: 'energy' },
+          { t: 'Ruhe und Gelassenheit', s: 'calm' },
+          { t: 'Erholung und einen Neustart', s: 'reset' } ] },
+        { q: 'Wann würdest du Core Elements trinken?', opts: [
+          { t: 'Beim konzentrierten Arbeiten', s: 'focus' },
+          { t: 'Vor oder beim Training', s: 'energy' },
+          { t: 'Zum Feierabend', s: 'calm' },
+          { t: 'Am Morgen danach', s: 'reset' } ] },
+        { q: 'Was beschreibt dich am besten?', opts: [
+          { t: 'Kopfmensch mit hohem Anspruch', s: 'focus' },
+          { t: 'Aktiv, sportlich, immer in Bewegung', s: 'energy' },
+          { t: 'Ich suche meine Balance', s: 'calm' },
+          { t: 'Ich achte bewusst auf Erholung', s: 'reset' } ] }
+      ];
+      var COLORS = { calm: 'var(--calm-mid)', focus: 'var(--focus-mid)', energy: 'var(--energy-mid)', reset: 'var(--reset-mid)' };
+      var GLOWS = { calm: 'rgba(244,157,72,0.20)', focus: 'rgba(21,127,139,0.18)', energy: 'rgba(217,83,79,0.18)', reset: 'rgba(127,140,141,0.16)' };
+
+      var idx = 0; var scores = { calm: 0, focus: 0, energy: 0, reset: 0 };
+
+      function setState(s) {
+        document.documentElement.style.setProperty('--state', s ? COLORS[s] : 'var(--accent)');
+        aura.style.background = 'radial-gradient(60% 50% at 50% 18%, ' + (s ? GLOWS[s] : 'var(--glow)') + ', transparent 70%)';
+      }
+
+      function intro() {
+        setState(null);
+        stage.innerHTML = '<div class="panel active intro">'
+          + '<div class="rings"><i></i><i></i><i></i><i></i></div>'
+          + '<span class="eyebrow" style="justify-content:center;">In 4 Fragen</span>'
+          + '<h1>Finde deinen <em>State</em>.</h1>'
+          + '<p>Vier Zustände, ein System. Beantworte vier kurze Fragen — wir empfehlen dir den Core, der zu deinem Alltag passt.</p>'
+          + '<div class="meta">Dauert keine Minute</div>'
+          + '<button class="btn" id="startBtn"><span class="lbl">Quiz starten</span> <span class="arrow">→</span></button>'
+          + '</div>';
+        document.getElementById('startBtn').addEventListener('click', function () { idx = 0; scores = { calm: 0, focus: 0, energy: 0, reset: 0 }; question(); });
+      }
+
+      function question() {
+        var Q = QUESTIONS[idx];
+        var pct = (idx / QUESTIONS.length) * 100;
+        var opts = Q.opts.map(function (o) {
+          return '<button class="opt" data-s="' + o.s + '" style="--od:' + COLORS[o.s] + '"><span class="dot"></span><span class="ot">' + o.t + '</span></button>';
+        }).join('');
+        stage.innerHTML = '<div class="panel active q">'
+          + '<div class="progress"><div class="bar"><i style="width:' + pct + '%"></i></div><span class="step">' + (idx + 1) + ' / ' + QUESTIONS.length + '</span></div>'
+          + '<h2>' + Q.q + '</h2>'
+          + '<div class="options">' + opts + '</div>'
+          + (idx > 0 ? '<button class="back" id="backBtn"><span>←</span> Zurück</button>' : '')
+          + '</div>';
+        // Fortschritt nach Auswahl füllen
+        setState(null);
+        stage.querySelectorAll('.opt').forEach(function (b) {
+          b.addEventListener('click', function () {
+            scores[b.dataset.s]++;
+            setState(b.dataset.s);
+            idx++;
+            if (idx >= QUESTIONS.length) { setTimeout(result, 180); }
+            else { setTimeout(question, 180); }
+          });
+        });
+        var back = document.getElementById('backBtn');
+        if (back) back.addEventListener('click', function () { idx--; question(); });
+      }
+
+      function winner() {
+        var order = ['focus', 'energy', 'calm', 'reset']; // Tie-Break-Reihenfolge
+        var best = order[0];
+        order.forEach(function (s) { if (scores[s] > scores[best]) best = s; });
+        return best;
+      }
+
+      function result() {
+        var id = winner();
+        var p = Core.productById(id);
+        setState(id);
+        var price = Core.formatPrice(Core.PRICING.complete);
+        stage.innerHTML = '<div class="panel active">'
+          + '<span class="eyebrow">Dein Ergebnis</span>'
+          + '<div class="result">'
+          + '<div class="result-visual"><img src="bottle-' + id + '.png" alt="' + p.name + '"></div>'
+          + '<div class="result-body">'
+          + '<div class="result-tag">Element ' + p.idx + ' · ' + p.tagline + '</div>'
+          + '<h2>' + p.name + '</h2>'
+          + '<p class="slogan">' + p.slogan + '</p>'
+          + '<p class="lead">' + p.lead + '</p>'
+          + '<p class="price">Komplett-Set (Flasche + Cap) · ' + price + '</p>'
+          + '<div class="result-actions">'
+          + '<button class="btn btn-state" id="addBtn"><span class="lbl">In den Warenkorb</span> <span class="arrow">→</span></button>'
+          + '<a class="btn btn-ghost" href="elements.html#' + id + '">Mehr erfahren</a>'
+          + '</div></div></div>'
+          + '<div class="result-again"><button class="back" id="againBtn"><span>↻</span> Quiz wiederholen</button></div>'
+          + '</div>';
+        document.getElementById('addBtn').addEventListener('click', function () { Core.add(id, 'complete', 1, false); });
+        document.getElementById('againBtn').addEventListener('click', intro);
+      }
+
+      intro();
+
+      var navToggle = document.getElementById('navToggle');
+      if (navToggle) {
+        navToggle.addEventListener('click', function () {
+          var open = document.getElementById('header').classList.toggle('open');
+          navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
