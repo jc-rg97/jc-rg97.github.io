@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Elements — Kasse</title>
+  <meta name="description" content="Sichere Kasse — schließe deine Core-Elements-Bestellung ab.">
+  <meta property="og:title" content="Core Elements">
+  <meta property="og:description" content="Sichere Kasse — schließe deine Core-Elements-Bestellung ab.">
+  <meta property="og:image" content="og-core.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo-color.png">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F4F2EE; --bg-warm: #FBFAF7; --bg-pure: #FFFFFF;
+      --ink: #111112; --muted: #666668; --faint: #9A9A98;
+      --line: rgba(17,17,18,0.08); --line-soft: rgba(17,17,18,0.04);
+      --accent: #6F8A66; --state-bright: #C6D4BF;
+      --surface: #EFF2EC; --surface-2: #E5EBDF;
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+      --header-h: 72px; --ease: cubic-bezier(0.25, 1, 0.3, 1);
+      --shadow-soft: 0 2px 8px -2px rgba(0,0,0,0.04), 0 14px 36px -10px rgba(0,0,0,0.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); color: var(--ink); background: var(--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+    body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    a { color: inherit; }
+
+    .site-header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 48px; height: var(--header-h); background: rgba(244,242,238,0.82); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid var(--line-soft); z-index: 1000; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+    .brand .mark { width: 28px; height: 28px; } .brand .mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .brand .name { font-weight: 700; font-size: 0.94rem; letter-spacing: 0.18em; }
+    .head-secure { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+    .head-secure svg { width: 15px; height: 15px; stroke: var(--accent); }
+
+    .checkout { max-width: 1180px; margin: 0 auto; padding: calc(var(--header-h) + 64px) 5% 60px; }
+    .checkout-top { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 38px; }
+    .checkout-top h1 { font-family: var(--font-display); font-weight: 300; font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -0.03em; }
+    .back-link { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: inline-flex; gap: 8px; align-items: center; transition: color 0.3s; }
+    .back-link:hover { color: var(--ink); }
+
+    .checkout-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 54px; align-items: start; }
+    .step { margin-bottom: 40px; }
+    .step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .step-num { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.8rem; flex: none; }
+    .step-head h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; letter-spacing: -0.01em; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .field input, .field select { font-family: var(--font-body); font-size: 0.96rem; padding: 13px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-pure); color: var(--ink); transition: border-color 0.3s, box-shadow 0.3s; }
+    .field input::placeholder { color: var(--faint); }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(111,138,102,0.14); }
+    .field.invalid input { border-color: #C0564F; box-shadow: 0 0 0 3px rgba(192,86,79,0.12); }
+    .field .err { font-family: var(--font-mono); font-size: 0.62rem; color: #C0564F; display: none; }
+    .field.invalid .err { display: block; }
+
+    .pay-options { display: flex; flex-direction: column; gap: 12px; }
+    .pay-opt { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; background: var(--bg-pure); transition: border-color 0.3s, background 0.3s; }
+    .pay-opt:hover { border-color: rgba(111,138,102,0.5); }
+    .pay-opt input { accent-color: var(--accent); width: 17px; height: 17px; }
+    .pay-opt.sel { border-color: var(--accent); background: var(--surface-2); }
+    .pay-opt .pay-name { font-weight: 600; font-size: 0.92rem; }
+    .pay-opt .pay-sub { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-left: auto; }
+    .card-fields { margin-top: 14px; display: none; }
+    .card-fields.show { display: block; }
+
+    .summary { position: sticky; top: calc(var(--header-h) + 24px); background: var(--bg-pure); border: 1px solid var(--line-soft); border-radius: 26px; padding: 30px; box-shadow: var(--shadow-soft); }
+    .summary h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; margin-bottom: 20px; letter-spacing: -0.01em; }
+    .sum-items { display: flex; flex-direction: column; }
+    .sum-row { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
+    .sum-row img { width: 42px; height: 58px; object-fit: contain; flex: none; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.10)); }
+    .sum-info { flex: 1; min-width: 0; }
+    .sum-title { font-weight: 600; font-size: 0.88rem; }
+    .sum-sub-tag { display: inline-block; margin-left: 7px; font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.08em; text-transform: uppercase; color: #5E7A54; background: var(--surface-2); border: 1px solid rgba(111,138,102,0.35); border-radius: 100px; padding: 2px 7px; vertical-align: middle; }
+    .sum-sub-note { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.04em; color: var(--accent); margin-top: 3px; }
+    .sum-qty { display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; }
+    .sum-qty button { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg-warm); cursor: pointer; line-height: 1; color: var(--ink); transition: border-color 0.3s; }
+    .sum-qty button:hover { border-color: var(--ink); }
+    .sum-qty span { font-variant-numeric: tabular-nums; font-size: 0.85rem; min-width: 12px; text-align: center; }
+    .sum-price { font-size: 0.88rem; white-space: nowrap; }
+    .sum-lines { margin-top: 18px; }
+    .sum-line { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--muted); margin-bottom: 9px; }
+    .sum-line.disc { color: #5E7A54; font-weight: 600; }
+    .sum-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .sum-total .l { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .sum-total .v { font-family: var(--font-display); font-size: 1.7rem; letter-spacing: -0.01em; }
+
+    .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(180deg, #2A2A2C 0%, #111112 100%); color: #fff; padding: 17px 30px; border-radius: 100px; text-decoration: none; font-weight: 500; font-size: 0.96rem; border: none; cursor: pointer; overflow: hidden; width: 100%; margin-top: 22px; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.15); }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -8px rgba(0,0,0,0.3); }
+    .btn .arrow { transition: transform 0.5s var(--ease); } .btn:hover .arrow { transform: translateX(6px); }
+    .sum-trust { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+    .sum-trust span { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--faint); }
+    .sum-trust svg { width: 14px; height: 14px; stroke: var(--accent); }
+
+    .empty-state { text-align: center; padding: 60px 20px 100px; }
+    .empty-state .es-mark { font-family: var(--font-display); font-style: italic; font-size: 1.6rem; color: var(--muted); margin-bottom: 22px; }
+
+    .confirm { max-width: 620px; margin: 0 auto; text-align: center; padding: calc(var(--header-h) + 90px) 6% 120px; }
+    .confirm .check { width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 30px; background: radial-gradient(circle at 50% 35%, #fff, var(--surface-2)); border: 1px solid rgba(111,138,102,0.4); display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 40px -16px rgba(111,138,102,0.5); }
+    .confirm .check svg { width: 38px; height: 38px; stroke: var(--accent); }
+    .confirm h1 { font-family: var(--font-display); font-weight: 300; font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -0.03em; margin-bottom: 16px; }
+    .confirm p { color: var(--muted); font-size: 1.08rem; max-width: 440px; margin: 0 auto 10px; }
+    .confirm .order-no { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.1em; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 100px; padding: 9px 18px; display: inline-block; margin: 22px 0 30px; }
+
+    .site-footer { padding: 60px 5.5%; background: var(--surface); border-top: 1px solid var(--line-soft); }
+    .footer-grid { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; max-width: 1400px; margin: 0 auto; }
+    .footer-tag { font-family: var(--font-display); font-style: italic; color: var(--muted); }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.66rem; color: var(--faint); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; gap: 30px; } .summary { position: static; order: -1; } }
+    @media (max-width: 560px) { .site-header { padding: 0 22px; } .field-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="brand"><span class="mark"><img src="logo-color.png" alt="Core Elements"></span><span class="name">CORE ELEMENTS</span></a>
+    <span class="head-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Sichere Verbindung</span>
+  </header>
+
+  <main id="checkoutMain">
+    <!-- gefüllt per JS -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-tag">Designed for real life.</div>
+      <div class="footer-copy">&copy; 2026 Core Elements.</div>
+    </div>
+  </footer>
+
+  <script src="core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var main = document.getElementById('checkoutMain');
+      var fmt = Core.formatPrice;
+
+      function summaryHTML() {
+        var items = Core.getItems(), t = Core.totals();
+        var rows = items.map(function (i) {
+          return '<div class="sum-row"><img src="' + i.img + '" alt="">'
+            + '<div class="sum-info"><div class="sum-title">' + i.name + (i.sub ? '<span class="sum-sub-tag">Abo</span>' : '') + '</div>'
+            + (i.sub ? '<div class="sum-sub-note">alle ' + Core.SUBSCRIPTION.everyWeeks + ' Wochen</div>' : '')
+            + '<div class="sum-qty"><button type="button" aria-label="Weniger" onclick="Core.changeQty(\'' + i.id + '\',-1)">\u2013</button><span>' + i.qty + '</span><button type="button" aria-label="Mehr" onclick="Core.changeQty(\'' + i.id + '\',1)">+</button></div></div>'
+            + '<div class="sum-price">' + fmt(i.price * i.qty) + '</div></div>';
+        }).join('');
+        var lines = '<div class="sum-line"><span>Zwischensumme</span><span>' + fmt(t.subtotal) + '</span></div>';
+        t.discounts.forEach(function (d) { lines += '<div class="sum-line disc"><span>' + d.label + '</span><span>\u2212\u00A0' + fmt(d.amount) + '</span></div>'; });
+        lines += '<div class="sum-line"><span>Versand</span><span>' + (t.shipping === 0 ? 'Kostenlos' : fmt(t.shipping)) + '</span></div>';
+        return '<aside class="summary"><h3>Deine Bestellung</h3><div class="sum-items">' + rows + '</div>'
+          + '<div class="sum-lines">' + lines + '</div>'
+          + '<div class="sum-total"><span class="l">Gesamt</span><span class="v">' + fmt(t.total) + '</span></div>'
+          + '<div class="sum-trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>SSL-gesichert</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5l2 2M20 5v4h-4"/></svg>30 Tage Rückgabe</span></div></aside>';
+      }
+
+      function formHTML() {
+        return '<form id="coForm" novalidate>'
+          + '<div class="step"><div class="step-head"><span class="step-num">1</span><h2>Kontakt</h2></div>'
+          + '<div class="field-grid"><div class="field full" data-req><label>E-Mail</label><input type="email" name="email" placeholder="du@beispiel.de" autocomplete="email"><span class="err">Bitte gültige E-Mail angeben.</span></div></div></div>'
+          + '<div class="step"><div class="step-head"><span class="step-num">2</span><h2>Lieferadresse</h2></div>'
+          + '<div class="field-grid">'
+          + '<div class="field" data-req><label>Vorname</label><input name="vorname" autocomplete="given-name"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field" data-req><label>Nachname</label><input name="nachname" autocomplete="family-name"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field full" data-req><label>Straße &amp; Hausnummer</label><input name="strasse" autocomplete="street-address"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field" data-req><label>PLZ</label><input name="plz" autocomplete="postal-code" inputmode="numeric"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field" data-req><label>Ort</label><input name="ort" autocomplete="address-level2"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field full"><label>Land</label><select name="land"><option>Deutschland</option><option>Österreich</option><option>Schweiz</option></select></div>'
+          + '</div></div>'
+          + '<div class="step"><div class="step-head"><span class="step-num">3</span><h2>Zahlung</h2></div>'
+          + '<div class="pay-options" id="payOptions">'
+          + '<label class="pay-opt sel"><input type="radio" name="pay" value="card" checked><span class="pay-name">Kredit- / Debitkarte</span><span class="pay-sub">Visa · Mastercard</span></label>'
+          + '<label class="pay-opt"><input type="radio" name="pay" value="paypal"><span class="pay-name">PayPal</span><span class="pay-sub">Schnell &amp; sicher</span></label>'
+          + '<label class="pay-opt"><input type="radio" name="pay" value="invoice"><span class="pay-name">Kauf auf Rechnung</span><span class="pay-sub">14 Tage</span></label>'
+          + '</div>'
+          + '<div class="card-fields show" id="cardFields"><div class="field-grid" style="margin-top:4px;">'
+          + '<div class="field full" data-req data-payreq><label>Kartennummer</label><input name="cardnr" placeholder="1234 5678 9012 3456" inputmode="numeric"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field" data-req data-payreq><label>Gültig bis</label><input name="exp" placeholder="MM/JJ"><span class="err">Erforderlich.</span></div>'
+          + '<div class="field" data-req data-payreq><label>CVC</label><input name="cvc" placeholder="123" inputmode="numeric"><span class="err">Erforderlich.</span></div>'
+          + '</div></div></div>'
+          + '<button type="submit" class="btn"><span class="lbl">Jetzt kaufen — <span id="coTotal"></span></span> <span class="arrow">\u2192</span></button>'
+          + '</form>';
+      }
+
+      function renderCheckout() {
+        var items = Core.getItems();
+        if (items.length === 0) {
+          main.innerHTML = '<div class="checkout"><div class="checkout-top"><h1>Kasse</h1><a class="back-link" href="elements.html"><span>\u2190</span> Weiter einkaufen</a></div>'
+            + '<div class="empty-state"><div class="es-mark">Dein Warenkorb ist noch leer.</div><a class="btn" style="max-width:260px;margin:0 auto;" href="elements.html"><span class="lbl">Elements entdecken</span> <span class="arrow">\u2192</span></a></div></div>';
+          return;
+        }
+        main.innerHTML = '<div class="checkout"><div class="checkout-top"><h1>Kasse</h1><a class="back-link" href="elements.html"><span>\u2190</span> Weiter einkaufen</a></div>'
+          + '<div class="checkout-grid"><div class="checkout-form">' + formHTML() + '</div>' + summaryHTML() + '</div></div>';
+        wireForm();
+        updateBtnTotal();
+      }
+
+      function updateBtnTotal() {
+        var el = document.getElementById('coTotal');
+        if (el) el.textContent = fmt(Core.totals().total);
+      }
+
+      function wireForm() {
+        var form = document.getElementById('coForm');
+        if (!form) return;
+        var payOptions = document.getElementById('payOptions');
+        var cardFields = document.getElementById('cardFields');
+        payOptions.querySelectorAll('input[name="pay"]').forEach(function (r) {
+          r.addEventListener('change', function () {
+            payOptions.querySelectorAll('.pay-opt').forEach(function (o) { o.classList.remove('sel'); });
+            r.closest('.pay-opt').classList.add('sel');
+            cardFields.classList.toggle('show', r.value === 'card');
+          });
+        });
+        form.querySelectorAll('input').forEach(function (inp) {
+          inp.addEventListener('input', function () { inp.closest('.field').classList.remove('invalid'); });
+        });
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var ok = true;
+          var cardSelected = form.querySelector('input[name="pay"]:checked').value === 'card';
+          form.querySelectorAll('.field[data-req]').forEach(function (f) {
+            if (f.hasAttribute('data-payreq') && !cardSelected) return;
+            var inp = f.querySelector('input');
+            var val = (inp.value || '').trim();
+            var valid = val.length > 0;
+            if (inp.type === 'email') valid = val.indexOf('@') > 0 && val.lastIndexOf('.') > val.indexOf('@') + 1;
+            if (!valid) { f.classList.add('invalid'); ok = false; } else { f.classList.remove('invalid'); }
+          });
+          if (!ok) { var bad = form.querySelector('.invalid input'); if (bad) bad.focus(); return; }
+          placeOrder();
+        });
+      }
+
+      function placeOrder() {
+        var no = 'CE-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+        Core.clear();
+        window.CoreOnCartChange = null;
+        main.innerHTML = '<div class="confirm"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-12"/></svg></div>'
+          + '<h1>Danke für deine Bestellung.</h1>'
+          + '<p>Wir haben deine Bestellung erhalten und schicken dir gleich eine Bestätigung per E-Mail. Dein inneres Gleichgewicht ist unterwegs.</p>'
+          + '<div class="order-no">Bestellnummer ' + no + '</div><br>'
+          + '<a class="btn" style="max-width:260px;margin:0 auto;" href="index.html"><span class="lbl">Zurück zur Startseite</span> <span class="arrow">\u2192</span></a></div>';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Bei Mengenänderung im Panel/Summary neu zeichnen
+      window.CoreOnCartChange = function () {
+        // nur die Summary + Button aktualisieren, Formularfelder erhalten
+        var sumWrap = document.querySelector('.checkout-grid');
+        if (!sumWrap) { renderCheckout(); return; }
+        if (Core.getItems().length === 0) { renderCheckout(); return; }
+        var old = document.querySelector('.summary');
+        if (old) { old.outerHTML = summaryHTML(); }
+        updateBtnTotal();
+      };
+
+      renderCheckout();
+    });
+  </script>
+</body>
+</html>
